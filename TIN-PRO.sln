@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIN-API", "TIN-API\TIN-API.csproj", "{5EA48C84-245A-4DFC-ACCB-CA84B616A36B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIN-CORE", "TIN-CORE\TIN-CORE.csproj", "{97885BB5-11DE-4343-AE9A-6476D8030CC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIN-DATA", "TIN-DATA\TIN-DATA.csproj", "{2D03A46D-413B-47D2-BED3-C085A39B578B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5EA48C84-245A-4DFC-ACCB-CA84B616A36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA48C84-245A-4DFC-ACCB-CA84B616A36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA48C84-245A-4DFC-ACCB-CA84B616A36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA48C84-245A-4DFC-ACCB-CA84B616A36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97885BB5-11DE-4343-AE9A-6476D8030CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97885BB5-11DE-4343-AE9A-6476D8030CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97885BB5-11DE-4343-AE9A-6476D8030CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97885BB5-11DE-4343-AE9A-6476D8030CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D03A46D-413B-47D2-BED3-C085A39B578B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D03A46D-413B-47D2-BED3-C085A39B578B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D03A46D-413B-47D2-BED3-C085A39B578B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D03A46D-413B-47D2-BED3-C085A39B578B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
