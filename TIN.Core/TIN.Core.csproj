@@ -2,13 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <RootNamespace>TIN_DATA</RootNamespace>
+        <RootNamespace>TIN.Core</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TIN-CORE\TIN-CORE.csproj" />
+      <ProjectReference Include="..\TIN.Data\TIN.Data.csproj" />
     </ItemGroup>
 
 </Project>

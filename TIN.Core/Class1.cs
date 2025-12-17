@@ -1,4 +1,4 @@
-﻿namespace TIN_CORE;
+﻿namespace TIN.Core;
 
 public class Class1
 {
