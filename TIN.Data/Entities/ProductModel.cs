@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TIN.Data.Entities.Configurations;
 
-namespace TIN.Data.Models;
+namespace TIN.Data.Entities;
 
 [EntityTypeConfiguration(typeof(ProductEntityConfiguration))]
 public class ProductModel

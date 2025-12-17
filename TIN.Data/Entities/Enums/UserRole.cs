@@ -1,4 +1,4 @@
-namespace TIN.Data.Models.Enums;
+namespace TIN.Data.Entities.Enums;
 
 public enum UserRole
 {

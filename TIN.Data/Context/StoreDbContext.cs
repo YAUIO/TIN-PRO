@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TIN.Data.Models;
+using TIN.Data.Entities;
 
 namespace TIN.Data.Context;
 
