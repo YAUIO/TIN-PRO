@@ -13,5 +13,9 @@ public class StoreDbContext(DbContextOptions options) : DbContext(options)
  
     private DbSet<SpecModel> Specs => Set<SpecModel>();
     
+    public DbSet<SpecNameModel> SpecNames => Set<SpecNameModel>();
+    
+    public DbSet<ProductDescriptionModel> ProductDescriptions => Set<ProductDescriptionModel>();
+    
     public DbSet<UserModel> Users => Set<UserModel>();
 }

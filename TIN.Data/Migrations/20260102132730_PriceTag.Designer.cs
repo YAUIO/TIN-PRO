@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TIN.Data.Context;
 
@@ -10,9 +11,11 @@ using TIN.Data.Context;
 namespace TIN.Data.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260102132730_PriceTag")]
+    partial class PriceTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
@@ -60,28 +63,14 @@ namespace TIN.Data.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("TIN.Data.Entities.ProductDescriptionModel", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Language")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ProductId", "Language");
-
-                    b.ToTable("ProductDescription", (string)null);
-                });
-
             modelBuilder.Entity("TIN.Data.Entities.ProductModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(4000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUri")
@@ -107,6 +96,11 @@ namespace TIN.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
 
@@ -120,25 +114,6 @@ namespace TIN.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Specs");
-                });
-
-            modelBuilder.Entity("TIN.Data.Entities.SpecNameModel", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Language")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("SpecId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Name", "Language");
-
-                    b.HasIndex("SpecId");
-
-                    b.ToTable("SpecNames", (string)null);
                 });
 
             modelBuilder.Entity("TIN.Data.Entities.UserModel", b =>
@@ -195,17 +170,6 @@ namespace TIN.Data.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("TIN.Data.Entities.ProductDescriptionModel", b =>
-                {
-                    b.HasOne("TIN.Data.Entities.ProductModel", "Product")
-                        .WithMany("Descriptions")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("TIN.Data.Entities.SpecModel", b =>
                 {
                     b.HasOne("TIN.Data.Entities.ProductModel", "Product")
@@ -217,17 +181,6 @@ namespace TIN.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("TIN.Data.Entities.SpecNameModel", b =>
-                {
-                    b.HasOne("TIN.Data.Entities.SpecModel", "Spec")
-                        .WithMany("Names")
-                        .HasForeignKey("SpecId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Spec");
-                });
-
             modelBuilder.Entity("TIN.Data.Entities.OrderModel", b =>
                 {
                     b.Navigation("Items");
@@ -235,16 +188,9 @@ namespace TIN.Data.Migrations
 
             modelBuilder.Entity("TIN.Data.Entities.ProductModel", b =>
                 {
-                    b.Navigation("Descriptions");
-
                     b.Navigation("Orders");
 
                     b.Navigation("Specs");
-                });
-
-            modelBuilder.Entity("TIN.Data.Entities.SpecModel", b =>
-                {
-                    b.Navigation("Names");
                 });
 
             modelBuilder.Entity("TIN.Data.Entities.UserModel", b =>

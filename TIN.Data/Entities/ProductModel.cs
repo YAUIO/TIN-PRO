@@ -12,7 +12,9 @@ public class ProductModel
     
     public string ImageUri { get; set; }
     
-    public string? Description { get; set; }
+    public decimal Price { get; set; }
+
+    public virtual ICollection<ProductDescriptionModel> Descriptions { get; set; } = [];
 
     public ICollection<SpecModel> Specs { get; set; } = [];
     

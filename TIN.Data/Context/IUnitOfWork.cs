@@ -12,5 +12,7 @@ public interface IUnitOfWork
     
     IUserRepository Users { get;  }
     
+    ILocalizationRepository Localizations { get; }
+    
     Task SaveChangesAsync();
 }

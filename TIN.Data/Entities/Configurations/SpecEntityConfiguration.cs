@@ -12,8 +12,8 @@ public class SpecEntityConfiguration : IEntityTypeConfiguration<SpecModel>
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
 
-        builder.Property(s => s.Key)
-            .HasMaxLength(100);
+        builder.HasMany(s => s.Names)
+            .WithOne(s => s.Spec);
 
         builder.Property(s => s.Value)
             .HasMaxLength(100);

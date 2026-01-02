@@ -15,9 +15,9 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductModel>
         builder.Property(p => p.ImageUri)
             .HasMaxLength(400);
 
-        builder.Property(p => p.Description)
-            .IsRequired(false)
-            .HasMaxLength(4000);
+        builder.HasMany(p => p.Descriptions)
+            .WithOne(d => d.Product)
+            .HasForeignKey(d => d.ProductId);
 
         builder.HasMany(p => p.Specs)
             .WithOne(s => s.Product);

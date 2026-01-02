@@ -5,12 +5,7 @@ using TIN.Data.Entities;
 namespace TIN.Data.Repositories;
 
 public class OrderItemsRepository(StoreDbContext context) : IOrderItemsRepository
-{
-    public async Task<IEnumerable<OrderItemModel>> GetAllItemsAsync()
-    {
-        return await context.OrderItems.ToListAsync();
-    }
-
+{ 
     public async Task<IEnumerable<OrderItemModel>> GetItemsByOrderIdAsync(Guid id)
     {
         return await context.OrderItems
