@@ -1,0 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using TIN.Data.Context;
+using TIN.Data.Entities;
+
+namespace TIN.Data.Repositories;
+
+public class OrderItemsRepository(StoreDbContext context) : IOrderItemsRepository
+{
+    public async Task<IEnumerable<OrderItemModel>> GetAllItemsAsync()
+    {
+        return await context.OrderItems.ToListAsync();
+    }
+
+    public async Task<IEnumerable<OrderItemModel>> GetItemsByOrderIdAsync(Guid id)
+    {
+        return await context.OrderItems
+            .Where(x => x.OrderId == id)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<OrderItemModel>> GetItemsByProductIdAsync(Guid id)
+    {
+        return await context.OrderItems
+            .Where(x => x.ProductId == id)
+            .ToListAsync();
+    }
+}

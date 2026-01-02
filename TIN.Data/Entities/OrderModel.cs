@@ -17,4 +17,6 @@ public class OrderModel
     public OrderStatus Status { get; set; } = OrderStatus.Created;
     
     public virtual UserModel Customer { get; set; }
+    
+    public ICollection<OrderItemModel> Items { get; set; } = [];
 }

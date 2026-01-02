@@ -15,4 +15,6 @@ public class ProductModel
     public string? Description { get; set; }
 
     public ICollection<SpecModel> Specs { get; set; } = [];
+    
+    public ICollection<OrderItemModel> Orders { get; set; } = [];
 }

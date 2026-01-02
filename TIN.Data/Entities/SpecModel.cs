@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TIN.Data.Entities.Configurations;
-using TIN.Data.Models;
 
 namespace TIN.Data.Entities;
 

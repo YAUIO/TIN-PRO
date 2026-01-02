@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TIN.Data.Models;
 
 namespace TIN.Data.Entities.Configurations;
 
@@ -22,5 +21,8 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductModel>
 
         builder.HasMany(p => p.Specs)
             .WithOne(s => s.Product);
+        
+        builder.HasMany(p => p.Orders)
+            .WithOne(o => o.Product);
     }
 }
