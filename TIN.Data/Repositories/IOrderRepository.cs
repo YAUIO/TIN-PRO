@@ -8,7 +8,7 @@ public interface IOrderRepository
     
     Task<OrderModel?> GetOrderAsync(Guid id);
     
-    void DeleteOrderAsync(OrderModel order);
+    void DeleteOrder(OrderModel order);
     
     Task AddOrderAsync(OrderModel order);
 }

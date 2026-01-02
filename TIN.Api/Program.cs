@@ -19,7 +19,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var cultures = new[] { "en", "ru" };
+var cultures = new[] { "en", "pl" };
 
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
@@ -27,5 +27,8 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedCultures = cultures.Select(c => new CultureInfo(c)).ToList(),
     SupportedUICultures = cultures.Select(c => new CultureInfo(c)).ToList()
 });
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
 
 await app.RunAsync();

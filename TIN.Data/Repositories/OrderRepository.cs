@@ -8,7 +8,10 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
 {
     public async Task<IEnumerable<OrderModel>> GetAllOrdersAsync()
     {
-        return await context.Orders.ToListAsync();
+        return await context.Orders
+            .Include(o => o.Customer)
+            .Include(o => o.Items)
+            .ToListAsync();
     }
 
     public async Task<OrderModel?> GetOrderAsync(Guid id)
@@ -16,7 +19,7 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
         return await context.Orders.FindAsync(id);
     }
 
-    public void DeleteOrderAsync(OrderModel order)
+    public void DeleteOrder(OrderModel order)
     {
         context.Orders.Remove(order);
     }

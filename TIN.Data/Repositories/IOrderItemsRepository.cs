@@ -7,4 +7,6 @@ public interface IOrderItemsRepository
     Task<IEnumerable<OrderItemModel>> GetItemsByOrderIdAsync(Guid id);
     
     Task<IEnumerable<OrderItemModel>> GetItemsByProductIdAsync(Guid id);
+
+    Task AddItemsAsync(IEnumerable<OrderItemModel> orderItems);
 }

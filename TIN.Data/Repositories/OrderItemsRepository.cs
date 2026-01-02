@@ -19,4 +19,9 @@ public class OrderItemsRepository(StoreDbContext context) : IOrderItemsRepositor
             .Where(x => x.ProductId == id)
             .ToListAsync();
     }
+
+    public async Task AddItemsAsync(IEnumerable<OrderItemModel> orderItems)
+    {
+        await context.OrderItems.AddRangeAsync(orderItems);
+    }
 }

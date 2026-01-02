@@ -12,7 +12,7 @@ public interface IOrderService
     
     Task<Guid> AddOrderAsync(PostOrderDto order);
     
-    Task UpdateOrderAsync(GetOrderDto order);
+    Task UpdateOrderAsync(PutOrderDto order);
     
-    void DeleteOrder(GetOrderDto order);
+    Task DeleteOrderAsync(Guid id);
 }

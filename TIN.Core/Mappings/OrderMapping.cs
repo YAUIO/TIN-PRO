@@ -6,13 +6,28 @@ namespace TIN.Core.Mappings;
 
 public static class OrderMapping
 {
-    public static GetOrderDto ToDto(this OrderModel model, Language language) => new()
+    public static GetOrderDto ToDto(this OrderModel model) => new()
     {
         Id = model.Id,
         OrderDate = model.CreatedAt,
         CompletionDate = model.CompletedAt,
         OrderStatus = model.Status,
-        Customer = model.Customer.ToDto(language),
-        Products = [.. model.Items.Select(s => s.ToDto(language))],
+        Customer = model.Customer.ToDto(),
+        Products = [.. model.Items.Select(s => s.ToDto())],
     };
+
+    public static OrderModel ToModel(this PostOrderDto dto) => new()
+    {
+        CreatedAt = dto.OrderDate,
+        CompletedAt = dto.CompletionDate,
+        Status = dto.OrderStatus ?? OrderStatus.Created,
+    };
+
+    public static OrderModel UpdateWithDto(this OrderModel model, PutOrderDto dto)
+    {
+        model.CreatedAt = dto.OrderDate;
+        model.CompletedAt = dto.CompletionDate;
+        model.Status = dto.OrderStatus;
+        return model;
+    }
 }
