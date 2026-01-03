@@ -14,6 +14,13 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<OrderModel>> GetAllOrdersByIdsAsync(IEnumerable<Guid> orderIds)
+    {
+        return await context.Orders
+            .Where(o => orderIds.Contains(o.Id))
+            .ToListAsync();
+    }
+
     public async Task<OrderModel?> GetOrderAsync(Guid id)
     {
         return await context.Orders.FindAsync(id);

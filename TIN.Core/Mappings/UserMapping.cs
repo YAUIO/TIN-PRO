@@ -1,6 +1,5 @@
 using TIN.Core.Dtos;
 using TIN.Data.Entities;
-using TIN.Data.Entities.Enums;
 
 namespace TIN.Core.Mappings;
 
@@ -13,4 +12,21 @@ public static class UserMapping
         UserRole = model.Role,
         Orders = [.. model.Orders.Select(s => s.ToDto())],
     };
+
+    public static UserModel ToModel(this PostUserDto dto) => new()
+    {
+        Nickname = dto.UserName,
+        Role = dto.UserRole,
+    };
+    
+    public static UserModel UpdateWithDto(this UserModel model, PutUserDto dto)
+    {
+        if (model.Id != dto.UserId)
+            throw new ArgumentException("User Id doesn't match");
+        
+        model.Nickname = dto.UserName;
+        model.Role = dto.UserRole;
+        
+        return model;
+    }
 }

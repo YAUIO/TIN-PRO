@@ -5,7 +5,7 @@ using TIN.Data.Context;
 
 namespace TIN.Core.Services;
 
-public class OrderService(StoreUnitOfWork uow) : IOrderService
+public class OrderService(IUnitOfWork uow) : IOrderService
 {
     public async Task<List<GetOrderDto>> GetAllOrdersAsync()
     {
@@ -69,5 +69,7 @@ public class OrderService(StoreUnitOfWork uow) : IOrderService
             ?? throw new BadRequestException();
         
         uow.Orders.DeleteOrder(order);
+
+        await uow.SaveChangesAsync();
     }
 }

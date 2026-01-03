@@ -14,6 +14,9 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserModel>
 
         builder.Property(u => u.Nickname)
             .HasMaxLength(20);
+        
+        builder.HasIndex(u => u.Nickname)
+            .IsUnique();
 
         builder.Property(u => u.PasswordHash)
             .HasMaxLength(100);

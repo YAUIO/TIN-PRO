@@ -6,11 +6,13 @@ public interface IUserService
 {
     Task<List<GetUserDto>> GetAllUsersAsync();
 
-    Task<GetUserDto> GetUserAsync(Guid orderId);
+    Task<GetUserDto> GetUserAsync(Guid userId);
     
-    Task<Guid> AddUserAsync(PostUserDto order);
+    Task<Guid> AddUserAsync(PostUserDto user);
     
-    Task UpdateUserAsync(GetUserDto order);
+    Task UpdateUserAsync(PutUserDto user);
     
-    void DeleteUser(GetUserDto order);
+    Task DeleteUserAsync(Guid id);
+    
+    Task<string> LoginUserAsync(AuthUserDto user);
 }

@@ -25,6 +25,9 @@ public static class OrderMapping
 
     public static OrderModel UpdateWithDto(this OrderModel model, PutOrderDto dto)
     {
+        if (dto.Id != model.Id)
+            throw new ArgumentException("Order id does not match");
+        
         model.CreatedAt = dto.OrderDate;
         model.CompletedAt = dto.CompletionDate;
         model.Status = dto.OrderStatus;

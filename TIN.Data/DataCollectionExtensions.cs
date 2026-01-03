@@ -20,6 +20,8 @@ public static class DataCollectionExtensions
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
+        services.AddScoped<ISpecRepository, SpecRepository>();
+        services.AddScoped<ILocalizationRepository, LocalizationRepository>();
         
         services.AddScoped<IUnitOfWork, StoreUnitOfWork>();
         

@@ -1,18 +1,19 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TIN.Frontend;
+using TIN.Frontend.Auth;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-builder.Services.AddOidcAuthentication(options =>
+builder.Services.AddHttpClient("Api", client =>
 {
-    // Configure your authentication provider options here.
-    // For more information, see https://aka.ms/blazor-standalone-auth
-    builder.Configuration.Bind("Local", options.ProviderOptions);
-});
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+}).AddHttpMessageHandler<JwtHandler>();
+    
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>();
 
 await builder.Build().RunAsync();

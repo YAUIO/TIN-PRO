@@ -16,7 +16,7 @@ public class ProductModel
 
     public virtual ICollection<ProductDescriptionModel> Descriptions { get; set; } = [];
 
-    public ICollection<SpecModel> Specs { get; set; } = [];
+    public virtual ICollection<SpecModel> Specs { get; set; } = [];
     
     public ICollection<OrderItemModel> Orders { get; set; } = [];
 }

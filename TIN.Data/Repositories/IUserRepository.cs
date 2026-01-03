@@ -8,6 +8,8 @@ public interface IUserRepository
     
     Task<UserModel?> GetUserAsync(Guid userId);
     
+    Task<UserModel?> GetUserAsync(string username);
+    
     Task AddUserAsync(UserModel user);
     
     void DeleteUser(UserModel user);

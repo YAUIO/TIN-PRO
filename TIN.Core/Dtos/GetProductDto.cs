@@ -8,6 +8,8 @@ public class GetProductDto
     
     public string ImageUri { get; init; }
     
+    public decimal Price { get; init; }
+    
     public string? Description { get; init; }
 
     public List<GetSpecDto> Specs { get; init; } = [];

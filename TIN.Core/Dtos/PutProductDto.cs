@@ -1,7 +1,9 @@
 namespace TIN.Core.Dtos;
 
-public class PostProductDto
+public class PutProductDto
 {
+    public Guid ProductId { get; init; }
+    
     public string Name { get; init; }
     
     public string ImageUri { get; init; }

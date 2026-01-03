@@ -12,7 +12,7 @@ public interface IProductService
     
     Task<Guid> AddProductAsync(PostProductDto product);
     
-    Task UpdateProductAsync(GetProductDto product);
+    Task UpdateProductAsync(PutProductDto product);
     
-    void DeleteProduct(GetProductDto product);
+    Task DeleteProduct(Guid id);
 }

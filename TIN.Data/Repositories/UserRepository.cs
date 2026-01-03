@@ -16,6 +16,11 @@ public class UserRepository(StoreDbContext context) : IUserRepository
         return await context.Users.FindAsync(userId);
     }
 
+    public async Task<UserModel?> GetUserAsync(string username)
+    {
+        return await context.Users.FirstOrDefaultAsync(u => u.Nickname == username);
+    }
+
     public async Task AddUserAsync(UserModel user)
     {
         await context.Users.AddAsync(user);

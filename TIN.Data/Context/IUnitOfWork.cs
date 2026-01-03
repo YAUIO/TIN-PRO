@@ -14,5 +14,7 @@ public interface IUnitOfWork
     
     ILocalizationRepository Localizations { get; }
     
+    ISpecRepository Specs { get; }
+    
     Task SaveChangesAsync();
 }

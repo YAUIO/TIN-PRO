@@ -11,4 +11,15 @@
       <ProjectReference Include="..\TIN.Data\TIN.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Identity.Core">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\10.0.0\ref\net10.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JWT" Version="11.0.0" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+    </ItemGroup>
+
 </Project>

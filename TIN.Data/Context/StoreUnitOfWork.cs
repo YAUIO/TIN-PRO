@@ -8,7 +8,8 @@ public class StoreUnitOfWork(
     IOrderItemsRepository orderItems,
     IProductRepository products, 
     IUserRepository users,
-    ILocalizationRepository localizations) 
+    ILocalizationRepository localizations,
+    ISpecRepository specs) 
     : IUnitOfWork
 {
     public IOrderRepository Orders => orders;
@@ -20,6 +21,8 @@ public class StoreUnitOfWork(
     public IUserRepository Users => users;
     
     public ILocalizationRepository Localizations => localizations;
+    
+    public ISpecRepository Specs => specs;
     
     public async Task SaveChangesAsync()
     {
