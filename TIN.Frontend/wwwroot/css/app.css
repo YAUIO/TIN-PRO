@@ -7,7 +7,7 @@ h1:focus {
 }
 
 a {
-    text-decoration: blue;
+    text-decoration: none;
 }
 
 .preview-image {
@@ -124,4 +124,8 @@ code {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.header-text {
+    color: black;
 }

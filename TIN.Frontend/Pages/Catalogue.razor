@@ -1,15 +1,17 @@
 ﻿@using TIN.Core.Dtos
 @using TIN.Frontend.Api
+@using TIN.Frontend.Cart
 
 @inject IProductFetcher ProductFetcher
+@inject CartService Cart
 @page "/"
 
-<PageTitle>Home</PageTitle>
-
-<h1>PC Store Application</h1>
+<PageTitle>Catalogue</PageTitle>
 
 @code{
     List<GetProductDto>? _products;
+
+    string _status = string.Empty;
     
     protected override async Task OnInitializedAsync()
     {
@@ -20,6 +22,29 @@
         else
             _products = [];
     }
+    
+    async Task AddToCart(GetProductDto product)
+    {
+        await Cart.AddToCart(new()
+        {
+            ProductId = product.ProductId,
+            ImageUri = product.ImageUri,
+            Name = product.Name,
+            UnitPrice = product.Price,
+            Quantity = 1,
+        });
+        
+        _status = "Added successfully!";
+        StateHasChanged();
+        
+        await Task.Delay(2000);
+        _status = string.Empty;
+    }
+}
+
+@if (!string.IsNullOrEmpty(_status))
+{
+    <div class="alert alert-success mt-2">@_status</div>
 }
 
 @if (_products == null)
@@ -41,14 +66,14 @@ else
         </tr>
         </thead>
         
-        <tbody class="">
+        <tbody>
         @foreach (var product in _products)
         {
             <tr>
                 <td><a href="product/@product.ProductId" class="h4">@product.Name</a></td>
                 <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
                 <td>@(product.Description ?? "No description available.")</td>
-                <td>@product.Price $</td>
+                <td>@product.Price $ <button class="btn btn-info" @onclick="() => AddToCart(product)">Add to cart</button></td>
             </tr>
         }
         </tbody>

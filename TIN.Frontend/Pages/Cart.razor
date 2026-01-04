@@ -1,0 +1,73 @@
+﻿@using TIN.Frontend.Cart
+
+@inject CartService CartService
+@page "/cart"
+
+<PageTitle>Catalogue</PageTitle>
+
+@code{
+    List<CartItem> _products = [];
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshCart();
+    }
+    
+    async Task RefreshCart()
+    {
+        _products = await CartService.GetCartAsync();
+    }
+
+    async Task Increase(CartItem item)
+    {
+        await CartService.AddToCart(item);
+        await RefreshCart();
+    }
+    
+    async Task Decrease(CartItem item)
+    {
+        await CartService.DeleteFromCart(item);
+        await RefreshCart();
+    }
+    
+    async Task Clear()
+    {
+        await CartService.ClearCart();
+        await RefreshCart();
+    }
+}
+
+@if (_products.Count == 0) {
+    <p> No products yet :( </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="w-15">Name</th>
+            <th class="w-25">Image</th>
+            <th class="w-15">Quantity</th>
+            <th class="w-15">Price</th>
+            <th class="w-auto"></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @foreach (var product in _products)
+        {
+            <tr>
+                <td><a href="product/@product.ProductId" class="h4">@product.Name</a></td>
+                <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
+                <td>@product.Quantity</td>
+                <td>@product.Price $ </td>
+                <td>
+                    <button class="align-content-center btn btn-info" @onclick="() => Increase(product)">+</button>
+                    <button class="align-content-center btn btn-warning" @onclick="() => Decrease(product)">-</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <button class="align-content-center btn btn-danger" @onclick="Clear">Clear cart</button>
+}

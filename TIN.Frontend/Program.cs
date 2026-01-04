@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TIN.Frontend;
 using TIN.Frontend.Api;
 using TIN.Frontend.Auth;
+using TIN.Frontend.Cart;
 using TIN.Frontend.Options;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -25,6 +26,8 @@ builder.Services.AddScoped<JwtHandler>();
 
 // Api
 builder.Services.AddScoped<IProductFetcher, ProductFetcher>();
+
+builder.Services.AddScoped<CartService>();
 
 // Binding Api endpoints configuration to an IOptions instance
 builder.Services.Configure<ApiOptions>(builder.Configuration.GetSection("Api"));
