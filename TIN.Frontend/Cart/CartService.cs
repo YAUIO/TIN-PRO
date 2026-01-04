@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 
 namespace TIN.Frontend.Cart;
 
-public class CartService(IJSRuntime js)
+public class CartService(IJSRuntime js) : ICartService
 {
     private const string StorageKey = "Cart";
 

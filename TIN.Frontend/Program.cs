@@ -27,7 +27,7 @@ builder.Services.AddScoped<JwtHandler>();
 // Api
 builder.Services.AddScoped<IProductFetcher, ProductFetcher>();
 
-builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 // Binding Api endpoints configuration to an IOptions instance
 builder.Services.Configure<ApiOptions>(builder.Configuration.GetSection("Api"));

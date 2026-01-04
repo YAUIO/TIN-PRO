@@ -1,10 +1,9 @@
-﻿@using TIN.Core.Dtos
+@using TIN.Core.Dtos
 @using TIN.Frontend.Api
 @using TIN.Frontend.Cart
 
 @inject IProductFetcher ProductFetcher
-@inject ICartService Cart
-@page "/product/{Id:guid}"
+@page "/product/{Id:guid}/edit"
 
 @code{
     [Parameter]
@@ -15,18 +14,6 @@
     protected override async Task OnInitializedAsync()
     {
         _product = await ProductFetcher.GetProduct(Id);
-    }
-
-    async Task AddToCart()
-    {
-        await Cart.AddToCart(new()
-        {
-            ProductId = _product!.ProductId,
-            ImageUri = _product.ImageUri,
-            Name = _product.Name,
-            UnitPrice = _product.Price,
-            Quantity = 1,
-        });
     }
 }
 
@@ -41,7 +28,7 @@ else
     <h2>@_product.Name</h2>
     <div>
         <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-        <h1>@_product.Price $ <button class="btn btn-info" @onclick="AddToCart">Add to cart</button></h1>
+        <h1>@_product.Price $ <button class="btn btn-info" @*@onclick=""*@>Edit product</button></h1>
     </div>
     <p>@(_product.Description ?? "No description available.")</p>
     <table class="table">
