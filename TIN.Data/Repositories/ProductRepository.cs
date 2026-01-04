@@ -8,12 +8,21 @@ public class ProductRepository(StoreDbContext context) : IProductRepository
 {
     public async Task<IEnumerable<ProductModel>> GetAllProductsAsync()
     {
-        return await context.Products.ToListAsync();
+        return await context.Products
+            .Include(p => p.Descriptions)
+            .Include(p => p.Specs)
+            .ThenInclude(s => s.Names)
+            .ToListAsync();
     }
 
     public async Task<ProductModel?> GetProductAsync(Guid id)
     {
-        return await context.Products.FindAsync(id);
+        return await context.Products
+            .Include(p => p.Descriptions)
+            .Include(p => p.Specs)
+            .ThenInclude(s => s.Names)
+            .Where(p => p.Id == id)
+            .FirstOrDefaultAsync();
     }
 
     public async Task AddProductAsync(ProductModel product)

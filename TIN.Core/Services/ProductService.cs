@@ -1,3 +1,5 @@
+using System.Globalization;
+using Microsoft.Extensions.Logging;
 using TIN.Core.Dtos;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
@@ -5,7 +7,7 @@ using TIN.Data.Context;
 
 namespace TIN.Core.Services;
 
-public class ProductService(IUnitOfWork uow) : IProductService
+public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : IProductService
 {
     public async Task<IEnumerable<GetProductDto>> GetAllProductsAsync()
     {

@@ -24,6 +24,17 @@ builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection("Jwt")
 );
 
+builder.Services.AddCors(corsBuilder =>
+{
+    corsBuilder.AddDefaultPolicy(policyBuilder =>
+    {
+        policyBuilder.AllowAnyOrigin()
+            .WithOrigins(builder.Configuration.GetConnectionString("Frontend")!)
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Tin.Core
 builder.Services.AddCoreServices();
 
@@ -51,6 +62,8 @@ var app = builder.Build();
 
 app.UseRouting();
 
+app.UseCors();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -70,9 +83,9 @@ CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
 
 app.UseExceptionHandler();
 
-app.MapControllers();
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 await app.RunAsync();

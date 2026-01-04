@@ -8,6 +8,7 @@ public static class ProductMapping
 {
     public static GetProductDto ToDto(this ProductModel model) => new()
     {
+        ProductId = model.Id,
         Name = model.Name,
         Description = model.Descriptions
             .FirstOrDefault(s => s.Language == CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLanguageEnum())?.Description,

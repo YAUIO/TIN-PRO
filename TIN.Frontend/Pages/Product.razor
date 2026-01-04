@@ -1,0 +1,51 @@
+﻿@using TIN.Core.Dtos
+@using TIN.Frontend.Api
+
+@inject IProductFetcher ProductFetcher
+@page "/product/{Id:guid}"
+
+@code{
+    [Parameter]
+    public Guid Id { get; init; }
+    
+    GetProductDto? _product;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _product = await ProductFetcher.GetProduct(Id);
+    }
+}
+
+<PageTitle>Home</PageTitle>
+
+<h1>PC Store Application</h1>
+
+@if (_product == null)
+{
+    <p> No such product </p>
+}
+else
+{
+    <h2>@_product.Name</h2>
+    <div>
+        <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
+        <h1>@_product.Price $</h1>
+    </div>
+    <p>@(_product.Description ?? "No description available.")</p>
+    <table class="table">
+        <thead>
+        <th></th>
+        <th></th>
+        </thead>
+        
+        <tbody>
+        @foreach (var spec in _product.Specs)
+        {
+            <tr>
+                <td>@spec.Key</td>
+                <td>@spec.Value</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

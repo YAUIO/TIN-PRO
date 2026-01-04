@@ -1,14 +1,11 @@
-using System.Net.Http.Json;
+using TIN.Frontend.Api;
 
 namespace TIN.Frontend.Auth;
 
-public class AuthApiService(HttpClient client)
+public class AuthApiService(IApiFetcher api)
 {
     public async Task<string> LoginAsync(string username, string password)
     {
-        var response = await client.PostAsJsonAsync("api/auth/login", new { username, password });
-        response.EnsureSuccessStatusCode();
-        
-        return await response.Content.ReadAsStringAsync();
+        return await api.PostAsync("api/auth/login", new { username, password });
     }
 }

@@ -162,6 +162,9 @@ namespace TIN.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Nickname")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
