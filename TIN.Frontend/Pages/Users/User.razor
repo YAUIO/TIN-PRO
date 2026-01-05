@@ -1,0 +1,78 @@
+@using TIN.Core.Dtos.User
+@using TIN.Frontend.Api
+@inject IUserFetcher Users
+
+@page "user/{id:guid}"
+
+@code 
+{
+    [Parameter]
+    public Guid Id { get; init; }
+    
+    GetUserDto? _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await Users.GetUserAsync(Id);
+    }
+}
+
+<PageTitle>@(_user?.UserName ?? "Error")</PageTitle>
+
+@if (_user == null)
+{
+    <p> No such user </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <th class="w-auto"> Name </th>
+        <th class="w-auto"> Role </th>
+        <th class="w-auto"></th>
+        <th class="w-auto"></th>
+        </thead>
+        
+        <tbody>
+        <tr>
+            <td>@_user.UserName</td>
+            <td>@_user.UserRole</td>
+            <td>
+                <a class="btn btn-info" href="user/@_user.UserId/edit"> Edit </a>
+                <a class="btn btn-info" href="user/@_user.UserId/delete"> Remove </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="w-auto">Id</th>
+            <th class="w-auto">Order Date</th>
+            <th class="w-auto">Completion Date</th>
+            <th class="w-auto">Order Status</th>
+            <th class="w-auto">Customer</th>
+            <th class="w-auto"></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @foreach (var order in _user.Orders)
+        {
+            <tr>
+                <td><a href="order/@order.Id" class="h4"></a></td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@(order.CompletionDate?.ToShortDateString() ?? "Not completed")</td>
+                <td>@order.OrderStatus</td>
+                <td>@order.Customer.UserName</td>
+                <td>
+                    <a class="btn btn-info" href="order/@order.Id">View</a>
+                    <a class="btn btn-warning" href="order/@order.Id/edit">Edit</a>
+                    <a class="btn btn-danger" href="order/@order.Id/delete">Remove</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

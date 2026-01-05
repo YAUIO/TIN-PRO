@@ -1,6 +1,8 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Order;
+using TIN.Core.Dtos.Product;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
 using TIN.Data.Context;

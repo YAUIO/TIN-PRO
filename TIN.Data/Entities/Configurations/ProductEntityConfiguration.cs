@@ -11,6 +11,9 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductModel>
 
         builder.Property(p => p.Id)
             .ValueGeneratedOnAdd();
+
+        builder.Property(p => p.Name)
+            .HasMaxLength(400);
         
         builder.Property(p => p.ImageUri)
             .HasMaxLength(400);

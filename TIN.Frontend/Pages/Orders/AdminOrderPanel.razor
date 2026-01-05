@@ -1,0 +1,62 @@
+@inject IOrderFetcher Orders
+
+@page "/admin/orders"
+@using TIN.Core.Dtos.Order
+@using TIN.Frontend.Api
+
+<PageTitle>Admin Order Panel</PageTitle>
+
+@code {
+    List<GetOrderDto>? _orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var orders = await Orders.GetAllOrdersAsync();
+
+        if (orders != null)
+            _orders = [.. orders];
+        else
+            _orders = [];
+    }
+}
+
+@if (_orders == null)
+{
+    <p> Loading... </p>
+} else if (_orders.Count == 0)
+{
+    <p> No orders yet :( </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="w-auto">Id</th>
+            <th class="w-auto">Order Date</th>
+            <th class="w-auto">Completion Date</th>
+            <th class="w-auto">Order Status</th>
+            <th class="w-auto">Customer</th>
+            <th class="w-auto"></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @foreach (var order in _orders)
+        {
+            <tr>
+                <td><a href="order/@order.Id" class="h4"></a></td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@(order.CompletionDate?.ToShortDateString() ?? "Not completed")</td>
+                <td>@order.OrderStatus</td>
+                <td>@order.Customer.UserName</td>
+                <td>
+                    <a class="btn btn-info" href="order/@order.Id">View</a>
+                    <a class="btn btn-warning" href="order/@order.Id/edit">Edit</a>
+                    <a class="btn btn-danger" href="order/@order.Id/delete">Remove</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

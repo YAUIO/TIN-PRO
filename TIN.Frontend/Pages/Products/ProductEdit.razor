@@ -1,0 +1,99 @@
+@inject IProductFetcher ProductFetcher
+@inject ISpecFetcher SpecFetcher
+@inject NavigationManager Nav
+
+@page "/product/{Id:guid}/edit"
+@using TIN.Core.Dtos.Product
+@using TIN.Frontend.Api
+
+@code{
+    [Parameter] public Guid Id { get; init; }
+
+    PutProductDto? _product;
+    GetProductDto? _getDto;
+
+    List<PostSpecDto> _specs = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _getDto = await ProductFetcher.GetProduct(Id);
+        
+        if (_getDto != null)
+            _product = new()
+            {
+                ProductId = _getDto.ProductId,
+                Name = _getDto.Name,
+                ImageUri = _getDto.ImageUri,
+                Price = _getDto.Price,
+            };
+    }
+
+    async Task EditProduct()
+    {
+        var specs = await SpecFetcher.CreateAllSpecsAsync(_specs);
+
+        await SpecFetcher.UpdateSpecsAsync(_getDto!.Specs);
+        
+        specs.AddRange(_getDto!.Specs.Select(s => s.Id));
+
+        _product!.Specs = specs;
+
+        await ProductFetcher.UpdateProductAsync(_product);
+        
+        Nav.Refresh();
+    }
+
+    void AddSpec()
+    {
+        _specs.Add(new());
+    }
+}
+
+<PageTitle>@(_product?.Name ?? "Error")</PageTitle>
+
+@if (_product == null || _getDto == null)
+{
+    <p> No such product </p>
+}
+else
+{
+    <EditForm @onsubmit="EditProduct">
+        <DataAnnotationsValidator />
+        
+        <InputText @bind-Value="_product.Name" class="h2"></InputText>
+        <div>
+            <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
+            <InputText @bind-Value="_product.ImageUri" class="h4"></InputText>
+            <InputNumber @bind-Value="_product.Price" class="h1"></InputNumber>
+        </div>
+        <a class="btn btn-warning" href="localization/@_product.ProductId">Edit localization</a>
+        <table class="table">
+            <thead>
+            <th class="w-auto"></th>
+            <th class="w-auto"></th>
+            <th class="w-auto"></th>
+            </thead>
+
+            <tbody>
+            @foreach (var spec in _getDto.Specs)
+            {
+                <tr>
+                    <td>@spec.Key</td>
+                    <InputText @bind-Value="spec.Value">@spec.Value</InputText>
+                    <button class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)"> Remove </button>
+                </tr>
+            }
+            @foreach (var spec in _specs)
+            {
+                <tr>
+                    <InputText @bind-Value="spec.Key">@spec.Key</InputText>
+                    <InputText @bind-Value="spec.Value">@spec.Value</InputText>
+                    <button class="btn btn-danger" @onclick="() => _specs.Remove(spec)"> Remove </button>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <button class="btn btn-warning" @onclick="AddSpec"> Add new spec </button>
+        <button type="submit" class="btn btn-success"></button>
+    </EditForm>
+}

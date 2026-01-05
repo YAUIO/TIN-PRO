@@ -1,20 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using TIN.Data.Entities.Enums;
 
-namespace TIN.Core.Dtos;
+namespace TIN.Core.Dtos.User;
 
-public class PutUserDto
+public class PostUserDto
 {
-    [Required]
-    public Guid UserId { get; init; }
-    
-    [Required]
     [Length(AuthUserDto.MinUserNameLength, AuthUserDto.MaxUserNameLength)]
     public string UserName { get; init; }
     
-    [Required]
+    [Length(AuthUserDto.MinPasswordLength, AuthUserDto.MaxPasswordLength)]
+    public string Password { get; init; }
+    
     public UserRole UserRole { get; init; }
-
-    [Required]
-    public ICollection<Guid> Orders { get; init; } = [];
 }

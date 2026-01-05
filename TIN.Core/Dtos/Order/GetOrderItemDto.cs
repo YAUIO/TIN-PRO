@@ -1,4 +1,6 @@
-namespace TIN.Core.Dtos;
+using TIN.Core.Dtos.Product;
+
+namespace TIN.Core.Dtos.Order;
 
 public class GetOrderItemDto
 {

@@ -1,4 +1,5 @@
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Order;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
 using TIN.Data.Context;

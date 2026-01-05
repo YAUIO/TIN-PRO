@@ -1,0 +1,55 @@
+@inject IUserFetcher Users
+
+@page "/admin/users"
+@using TIN.Core.Dtos.User
+@using TIN.Frontend.Api
+
+<PageTitle>Admin User Panel</PageTitle>
+
+@code {
+    List<GetUserDto>? _users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var users = await Users.GetAllUsersAsync();
+
+        if (users == null)
+            _users = [];
+        else
+            _users = [.. users];
+    }
+}
+
+@if (_users == null)
+{
+    <p> Loading... </p>
+} else if (_users.Count == 0)
+{
+    <p> No users here :( </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <th class="w-auto"> Name </th>
+        <th class="w-auto"> Role </th>
+        <th class="w-auto"></th>
+        <th class="w-auto"></th>
+        </thead>
+        
+        <tbody>
+        @foreach (var user in _users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.UserRole</td>
+                <td>
+                    <a class="btn btn-info" href="user/@user.UserId"> View </a>
+                    <a class="btn btn-info" href="user/@user.UserId/edit"> Edit </a>
+                    <a class="btn btn-info" href="user/@user.UserId/delete"> Remove </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

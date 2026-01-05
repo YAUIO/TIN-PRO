@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.User;
 using TIN.Core.Services;
 
 namespace TIN_PRO.Controllers;

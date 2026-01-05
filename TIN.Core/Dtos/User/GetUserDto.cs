@@ -1,6 +1,7 @@
+using TIN.Core.Dtos.Order;
 using TIN.Data.Entities.Enums;
 
-namespace TIN.Core.Dtos;
+namespace TIN.Core.Dtos.User;
 
 public class GetUserDto
 {

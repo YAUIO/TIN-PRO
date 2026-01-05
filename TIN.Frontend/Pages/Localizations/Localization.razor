@@ -1,0 +1,116 @@
+@page "localization/{id:guid}"
+@using TIN.Core.Dtos.Localization
+@using TIN.Core.Dtos.Product
+@using TIN.Frontend.Api
+
+@inject ILocalizationFetcher Localizations
+@inject IProductFetcher Products
+
+@code{
+    [Parameter]
+    public Guid Id { get; init; }
+    
+    GetProductDto? _product;
+
+    List<GetProductDescriptionDto>? _descriptions;
+    List<GetSpecNameDto>? _specNames;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _product = await Products.GetProduct(Id);
+
+        if (_product != null)
+        {
+            var descs = await Localizations.GetProductDescriptionsAsync(Id);
+            var specnames = await Localizations.GetSpecNamesAsync(Id);
+
+            if (descs == null)
+                _descriptions = [];
+            else
+                _descriptions = [.. descs];
+
+            if (specnames == null)
+                _specNames = [];
+            else
+                _specNames = [.. specnames];
+        }
+    }
+}
+
+<PageTitle>@(_product?.Name ?? "Error")</PageTitle>
+
+@if (_product == null)
+{
+    <p> No such product </p>
+}
+else
+{
+    <h2>@_product.Name</h2>
+    <div>
+        <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
+        <h1>@_product.Price $</h1>
+    </div>
+    <p>@(_product.Description ?? "No description available.")</p>
+    <table class="table">
+        <thead>
+        <th></th>
+        <th></th>
+        </thead>
+        
+        <tbody>
+        @foreach (var spec in _product.Specs)
+        {
+            <tr>
+                <td>@spec.Key</td>
+                <td>@spec.Value</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <h4> Description localizations </h4>
+    <table class="table">
+        <thead>
+        <th class="w-auto"> Description </th>
+        <th class="w-auto"> Language </th>
+        <th class="w-auto"></th>
+        </thead>
+        
+        <tbody>
+        @foreach (var desc in _descriptions!)
+        {
+            <tr>
+                <td>@desc.Description</td>
+                <td>@desc.Language</td>
+                <td>
+                    <a class="btn btn-success" href="localization/@_product.ProductId/description/add"></a>
+                    <a class="btn btn-warning" href="localization/@_product.ProductId/description/@desc.Language/edit"></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <h4> Spec localizations </h4>
+    <table class="table">
+        <thead>
+        <th class="w-auto"> Name </th>
+        <th class="w-auto"> Language </th>
+        <th class="w-auto"></th>
+        </thead>
+        
+        <tbody>
+        @foreach (var specName in _specNames!)
+        {
+            <tr>
+                <td>@specName.Name</td>
+                <td>@specName.Language</td>
+                <td>
+                    <a class="btn btn-success" href="localization/@specName.SpecId/add"></a>
+                    <a class="btn btn-warning" href="localization/@specName.SpecId/@specName.Language/edit"></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -23,7 +23,9 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
 
     public async Task<OrderModel?> GetOrderAsync(Guid id)
     {
-        return await context.Orders.FindAsync(id);
+        return await context.Orders
+            .Include(o => o.Items)
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public void DeleteOrder(OrderModel order)

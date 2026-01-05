@@ -1,17 +1,17 @@
-﻿@using TIN.Core.Dtos
+@page "/admin/localizations/"
+@using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 
-@inject IProductFetcher ProductFetcher
-@page "/admin/products"
+@inject IProductFetcher Products;
 
-<PageTitle>Admin Catalogue</PageTitle>
+<PageTitle>Localizations</PageTitle>
 
 @code{
     List<GetProductDto>? _products;
     
     protected override async Task OnInitializedAsync()
     {
-        var products = await ProductFetcher.GetAllProducts();
+        var products = await Products.GetAllProducts();
 
         if (products != null)
             _products = [.. products];
@@ -44,14 +44,10 @@ else
         @foreach (var product in _products)
         {
             <tr>
-                <td><a href="product/@product.ProductId" class="h4">@product.Name</a></td>
+                <td><a href="localization/@product.ProductId" class="h4">@product.Name</a></td>
                 <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
                 <td>@(product.Description ?? "No description available.")</td>
                 <td>@product.Price $</td>
-                <td>
-                    <a class="btn btn-warning" href="product/@product.ProductId/edit">Edit product</a>
-                    <a class="btn btn-danger" href="product/@product.ProductId/delete/">Remove product</a>
-                </td>
             </tr>
         }
         </tbody>

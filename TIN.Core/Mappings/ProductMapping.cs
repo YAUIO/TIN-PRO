@@ -1,5 +1,6 @@
 using System.Globalization;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Product;
 using TIN.Data.Entities;
 
 namespace TIN.Core.Mappings;

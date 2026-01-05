@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TIN.Core.Dtos;
+namespace TIN.Core.Dtos.User;
 
 public class AuthUserDto
 {

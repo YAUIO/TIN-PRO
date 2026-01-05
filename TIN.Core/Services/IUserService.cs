@@ -1,4 +1,5 @@
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.User;
 
 namespace TIN.Core.Services;
 

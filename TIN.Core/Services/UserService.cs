@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.User;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
 using TIN.Data.Context;

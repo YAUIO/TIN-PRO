@@ -26,6 +26,10 @@ builder.Services.AddScoped<JwtHandler>();
 
 // Api
 builder.Services.AddScoped<IProductFetcher, ProductFetcher>();
+builder.Services.AddScoped<ILocalizationFetcher, LocalizationFetcher>();
+builder.Services.AddScoped<IOrderFetcher, OrderFetcher>();
+builder.Services.AddScoped<ISpecFetcher, SpecFetcher>();
+builder.Services.AddScoped<IUserFetcher, UserFetcher>();
 
 builder.Services.AddScoped<ICartService, CartService>();
 

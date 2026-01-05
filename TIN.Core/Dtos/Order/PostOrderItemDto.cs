@@ -1,4 +1,4 @@
-namespace TIN.Core.Dtos;
+namespace TIN.Core.Dtos.Order;
 
 public class PostOrderItemDto
 {

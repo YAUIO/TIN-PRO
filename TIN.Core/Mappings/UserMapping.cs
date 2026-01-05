@@ -1,4 +1,5 @@
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.User;
 using TIN.Data.Entities;
 
 namespace TIN.Core.Mappings;

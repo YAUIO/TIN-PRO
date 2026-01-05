@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Product;
 using TIN.Frontend.Options;
 
 namespace TIN.Frontend.Api;
@@ -30,5 +31,15 @@ public class ProductFetcher(IApiFetcher api, IOptions<ApiOptions> options) : IPr
         {
             return null;
         }
+    }
+
+    public async Task RemoveProduct(Guid id)
+    {
+        await api.DeleteAsync(_apicfg.Products, id.ToString());
+    }
+
+    public async Task UpdateProductAsync(PutProductDto product)
+    {
+        await api.UpdateAsync(_apicfg.Products, product);
     }
 }

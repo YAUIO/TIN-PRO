@@ -1,4 +1,6 @@
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Order;
+using TIN.Core.Dtos.Product;
 
 namespace TIN.Core.Services;
 
