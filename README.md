@@ -23,7 +23,7 @@ Db connection string is in TIN.Api/appsettings.json
 
 
 ## Frontend: Two options
-Serve via any http server as SPA
+### Serve via any http server as SPA
 ```
 dotnet publish
 cd bin/Release/net10.0/publish/wwwroot
@@ -34,7 +34,7 @@ python3 -m http.server 5221
 Backend connection string is in appsettings.json
 
 
-Serve via dotnet
+### Serve via dotnet
 ```
 dotnet run --project TIN.Frontend
 
