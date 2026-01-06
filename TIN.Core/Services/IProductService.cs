@@ -6,7 +6,7 @@ namespace TIN.Core.Services;
 
 public interface IProductService
 {
-    Task<IEnumerable<GetProductDto>> GetAllProductsAsync();
+    Task<IEnumerable<GetProductDto>> GetAllProductsAsync(PaginationDto? dto);
     
     Task<List<GetOrderItemDto>> GetAllOrderItemsAsync(Guid productId);
 

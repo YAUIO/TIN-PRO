@@ -14,7 +14,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        _product = await ProductFetcher.GetProduct(Id);
+        _product = await ProductFetcher.GetProductAsync(Id);
     }
 
     async Task AddToCart()

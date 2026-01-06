@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using TIN.Core.Dtos;
 using TIN.Core.Dtos.User;
 using TIN.Frontend.Options;
 
@@ -13,6 +14,18 @@ public class UserFetcher(IOptions<ApiOptions> options, IApiFetcher api) : IUserF
         try
         {
             return await api.FetchAsync<IEnumerable<GetUserDto>>(_apicfg.Users);
+        }
+        catch (HttpRequestException)
+        {
+            return null;
+        }
+    }
+
+    public async Task<IEnumerable<GetUserDto>?> GetAllUsersAsync(PaginationDto? dto)
+    {
+        try
+        {
+            return await api.FetchAsync<IEnumerable<GetUserDto>>($"{_apicfg.Users}/{dto?.PageSize ?? int.MaxValue}/{dto?.Page ?? 1}");
         }
         catch (HttpRequestException)
         {

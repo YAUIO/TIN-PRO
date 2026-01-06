@@ -5,7 +5,7 @@ namespace TIN.Core.Services;
 
 public interface IOrderService
 {
-    Task<List<GetOrderDto>> GetAllOrdersAsync();
+    Task<List<GetOrderDto>> GetAllOrdersAsync(PaginationDto? dto);
     
     Task<List<GetOrderItemDto>> GetAllOrderItemsAsync(Guid orderId);
 

@@ -11,6 +11,7 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
         return await context.Orders
             .Include(o => o.Customer)
             .Include(o => o.Items)
+            .ThenInclude(i => i.Product)
             .ToListAsync();
     }
 

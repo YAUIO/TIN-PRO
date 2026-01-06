@@ -22,7 +22,20 @@ public class ProductFetcher(IApiFetcher api, IOptions<ApiOptions> options, ILogg
         }
     }
 
-    public async Task<GetProductDto?> GetProduct(Guid id)
+    public async Task<IEnumerable<GetProductDto>?> GetAllProductsAsync(PaginationDto? dto)
+    {
+        
+        try
+        {
+            return await api.FetchAsync<IEnumerable<GetProductDto>>($"{_apicfg.Products}/{dto?.PageSize ?? int.MaxValue}/{dto?.Page ?? 1}");
+        }
+        catch (HttpRequestException)
+        {
+            return null;
+        }
+    }
+
+    public async Task<GetProductDto?> GetProductAsync(Guid id)
     {
         try
         {
@@ -34,7 +47,7 @@ public class ProductFetcher(IApiFetcher api, IOptions<ApiOptions> options, ILogg
         }
     }
 
-    public async Task RemoveProduct(Guid id)
+    public async Task RemoveProductAsync(Guid id)
     {
         await api.DeleteAsync(_apicfg.Products, id.ToString());
     }

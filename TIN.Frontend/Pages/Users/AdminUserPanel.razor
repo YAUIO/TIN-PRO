@@ -3,20 +3,21 @@
 
 @page "/admin/users"
 @using System.Net
+@using TIN.Core.Dtos
 @using TIN.Core.Dtos.User
 @using TIN.Frontend.Api
 
 <PageTitle>Admin User Panel</PageTitle>
 
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Administrator">
     <Authorized>
 
     @code {
         List<GetUserDto>? _users;
-
+        
         protected override async Task OnInitializedAsync()
         {
-            var users = await Users.GetAllUsersAsync();
+            var users = await Users.GetAllUsersAsync(_dto);
 
             if (users == null)
                 _users = [];
@@ -36,7 +37,39 @@
             }
         }
 
+        PaginationDto _dto = new();
+        
+        async Task Prev()
+        {
+            _dto.Page--;
+            if (_dto.Page <= 1) 
+                _dto.Page = 1;
+            await OnInitializedAsync();
+        }
+
+        async Task Next()
+        {
+            _dto.Page++;
+            await OnInitializedAsync();
+        }
     }
+    
+    <EditForm Model="_dto">
+        <ChildContent Context="editContext">
+            <button class="btn btn-info" @onclick="Prev"> Previous </button>
+             @_dto.Page 
+            <button class="btn btn-info" @onclick="Next"> Next </button> <br/>
+                
+            <br/> <select class="form-select form-select-sm w-auto" @bind="_dto.PageSize" @bind:after="OnInitializedAsync">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="25">50</option>
+                <option value="@(int.MaxValue)">All</option> <br/>
+            </select>
+        </ChildContent>
+    </EditForm>
 
     @if (_users == null)
     {
@@ -48,6 +81,7 @@
     }
     else
     {
+        
         <table class="table">
             <thead>
             <th class="w-auto"> Name </th>

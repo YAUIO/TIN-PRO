@@ -1,4 +1,5 @@
-﻿@using TIN.Core.Dtos.Product
+﻿@using TIN.Core.Dtos
+@using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 @using TIN.Frontend.Cart
 
@@ -14,7 +15,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        var products = await ProductFetcher.GetAllProducts();
+        var products = await ProductFetcher.GetAllProductsAsync(_dto);
 
         if (products != null)
             _products = [.. products];
@@ -35,6 +36,22 @@
 
         await Status.SetStatusAsync("Added successfully!", StatusService.StatusType.Success);
     }
+    
+    PaginationDto _dto = new();
+        
+    async Task Prev()
+    {
+        _dto.Page--;
+        if (_dto.Page <= 1) 
+            _dto.Page = 1;
+        await OnInitializedAsync();
+    }
+
+    async Task Next()
+    {
+        _dto.Page++;
+        await OnInitializedAsync();
+    }
 }
 
 @if (_products == null)
@@ -46,6 +63,23 @@ else if (_products.Count == 0) {
 }
 else
 {
+    <EditForm Model="_dto">
+        <ChildContent Context="editContext">
+            <button class="btn btn-info" @onclick="Prev"> Previous </button>
+             @_dto.Page 
+            <button class="btn btn-info" @onclick="Next"> Next </button> <br/>
+                
+            <br/> <select class="form-select form-select-sm w-auto" @bind="_dto.PageSize" @bind:after="OnInitializedAsync">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="25">50</option>
+                <option value="@(int.MaxValue)">All</option> <br/>
+            </select>
+        </ChildContent>
+    </EditForm>
+    
     <table class="table">
         <thead>
         <tr>

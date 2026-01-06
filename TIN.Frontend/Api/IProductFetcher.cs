@@ -5,11 +5,11 @@ namespace TIN.Frontend.Api;
 
 public interface IProductFetcher
 {
-    Task<IEnumerable<GetProductDto>?> GetAllProducts();
+    Task<IEnumerable<GetProductDto>?> GetAllProductsAsync(PaginationDto? dto);
     
-    Task<GetProductDto?> GetProduct(Guid id);
+    Task<GetProductDto?> GetProductAsync(Guid id);
 
-    Task RemoveProduct(Guid id);
+    Task RemoveProductAsync(Guid id);
     
     Task UpdateProductAsync(PutProductWrapperDto product);
     

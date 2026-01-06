@@ -8,10 +8,14 @@ namespace TIN_PRO.Controllers;
 [Route($"{ApiConstants.BaseApiUri}/[controller]")]
 public class OrdersController(IOrderService orders) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllOrders()
+    [HttpGet("{pageSize:int}/{page:int}")]
+    public async Task<IActionResult> GetAllOrders([FromRoute] int page, [FromRoute] int pageSize)
     {
-        return Ok(await orders.GetAllOrdersAsync());
+        return Ok(await orders.GetAllOrdersAsync(new()
+        {
+            Page = page,
+            PageSize = pageSize,
+        }));
     }
     
     [HttpGet("{id:guid}")]

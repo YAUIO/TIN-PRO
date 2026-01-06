@@ -11,10 +11,12 @@ namespace TIN.Core.Services;
 
 public class UserService(IUnitOfWork uow, IPasswordHasher<UserModel> hasher, IAuthService auth) : IUserService
 {
-    public async Task<List<GetUserDto>> GetAllUsersAsync()
+    public async Task<List<GetUserDto>> GetAllUsersAsync(PaginationDto? dto)
     {
         var users = await uow.Users.GetAllUsersAsync();
 
+        users = users.Paginate(dto);
+        
         return [.. users.Select(u => u.ToDto())];
     }
 

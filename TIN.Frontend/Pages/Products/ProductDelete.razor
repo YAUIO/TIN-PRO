@@ -8,7 +8,7 @@
 
 @page "/product/{Id:guid}/delete"
 
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Administrator">
     <Authorized>
 
     @code{
@@ -18,14 +18,14 @@
 
         protected override async Task OnInitializedAsync()
         {
-            _product = await ProductFetcher.GetProduct(Id);
+            _product = await ProductFetcher.GetProductAsync(Id);
         }
 
         async Task RemoveProduct()
         {
             try
             {
-                await ProductFetcher.RemoveProduct(Id);
+                await ProductFetcher.RemoveProductAsync(Id);
                 await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success, 800);
                 Nav.NavigateTo("/admin/products");
             }

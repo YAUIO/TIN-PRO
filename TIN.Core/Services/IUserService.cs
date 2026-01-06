@@ -5,7 +5,7 @@ namespace TIN.Core.Services;
 
 public interface IUserService
 {
-    Task<List<GetUserDto>> GetAllUsersAsync();
+    Task<List<GetUserDto>> GetAllUsersAsync(PaginationDto? dto);
 
     Task<GetUserDto> GetUserAsync(Guid userId);
     

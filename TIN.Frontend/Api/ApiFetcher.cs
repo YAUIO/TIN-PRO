@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TIN.Core.Dtos;
 
 namespace TIN.Frontend.Api;
 
@@ -20,7 +21,7 @@ public class ApiFetcher(HttpClient http) : IApiFetcher
 
         return result!;
     }
-    
+
     public async Task UpdateAsync(string path, object json)
     {
         var result = await http.PutAsJsonAsync(path, json);

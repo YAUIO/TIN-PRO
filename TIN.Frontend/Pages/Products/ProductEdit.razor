@@ -9,7 +9,7 @@
 @using TIN.Core.Exceptions
 @using TIN.Frontend.Api
 
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Administrator">
     <Authorized>
     @code{
         [Parameter] public Guid Id { get; init; }
@@ -21,7 +21,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            _getDto = await ProductFetcher.GetProduct(Id);
+            _getDto = await ProductFetcher.GetProductAsync(Id);
 
             if (_getDto != null)
                 _product = new PutProductDto
@@ -48,6 +48,8 @@
                 };
 
                 await ProductFetcher.UpdateProductAsync(dto);
+
+                await Status.SetStatusAsync("Updated successfully!", StatusService.StatusType.Success, 800);
             }
             catch (HttpRequestException e)
             {

@@ -7,7 +7,7 @@
 @inject ILocalizationFetcher Localizations
 @inject IProductFetcher Products
 
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Administrator">
     <Authorized>
 
     @code{
@@ -20,7 +20,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            _product = await Products.GetProduct(Id);
+            _product = await Products.GetProductAsync(Id);
 
             if (_product != null)
             {

@@ -8,9 +8,12 @@ namespace TIN.Core.Services;
 
 public class OrderService(IUnitOfWork uow) : IOrderService
 {
-    public async Task<List<GetOrderDto>> GetAllOrdersAsync()
+    public async Task<List<GetOrderDto>> GetAllOrdersAsync(PaginationDto? dto)
     {
         var orders = await uow.Orders.GetAllOrdersAsync();
+
+        orders = orders.Paginate(dto);
+        
         return [.. orders.Select(s => s.ToDto())];
     }
 

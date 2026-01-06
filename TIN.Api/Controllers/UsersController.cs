@@ -7,10 +7,14 @@ namespace TIN_PRO.Controllers;
 [Route($"{ApiConstants.BaseApiUri}/[controller]")]
 public class UsersController(IUserService users) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    [HttpGet("{pageSize:int}/{page:int}")]
+    public async Task<IActionResult> GetAllUsers([FromRoute] int page, [FromRoute] int pageSize)
     {
-        return Ok(await users.GetAllUsersAsync());
+        return Ok(await users.GetAllUsersAsync(new()
+        {
+            Page = page,
+            PageSize = pageSize,
+        }));
     }
     
     [HttpGet("{id:guid}")]

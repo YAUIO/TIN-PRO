@@ -1,3 +1,4 @@
+using TIN.Core.Dtos;
 using TIN.Core.Dtos.Order;
 using TIN.Core.Dtos.Product;
 using TIN.Core.Exceptions;
@@ -10,9 +11,12 @@ namespace TIN.Core.Services;
 
 public class ProductService(IUnitOfWork uow) : IProductService
 {
-    public async Task<IEnumerable<GetProductDto>> GetAllProductsAsync()
+    public async Task<IEnumerable<GetProductDto>> GetAllProductsAsync(PaginationDto? dto)
     {
         var products = await uow.Products.GetAllProductsAsync();
+
+        products = products.Paginate(dto);
+        
         return [.. products.Select(s => s.ToDto())];
     }
 
