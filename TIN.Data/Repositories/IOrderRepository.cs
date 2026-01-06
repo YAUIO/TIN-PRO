@@ -13,4 +13,5 @@ public interface IOrderRepository
     void DeleteOrder(OrderModel order);
     
     Task AddOrderAsync(OrderModel order);
+    Task<IEnumerable<OrderModel>> GetAllOrdersByUsernameAsync(string username);
 }

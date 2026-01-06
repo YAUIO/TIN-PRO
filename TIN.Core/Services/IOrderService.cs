@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using TIN.Core.Dtos;
 using TIN.Core.Dtos.Order;
 
@@ -9,11 +10,13 @@ public interface IOrderService
     
     Task<List<GetOrderItemDto>> GetAllOrderItemsAsync(Guid orderId);
 
-    Task<GetOrderDto> GetOrderAsync(Guid orderId);
+    Task<GetOrderDto> GetOrderAsync(Guid orderId, ClaimsPrincipal user);
     
     Task<Guid> AddOrderAsync(PostOrderDto order);
     
     Task UpdateOrderAsync(PutOrderDto order);
     
     Task DeleteOrderAsync(Guid id);
+    
+    Task<List<GetOrderDto>> GetAllUserOrdersAsync(string username, ClaimsPrincipal user, PaginationDto paginationDto);
 }

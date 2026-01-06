@@ -53,4 +53,16 @@ public class OrderFetcher(IOptions<ApiOptions> options, IApiFetcher api) : IOrde
         var id = await api.PostAsync(_apicfg.Orders, dto);
         return JsonSerializer.Deserialize<Guid>(id);
     }
+
+    public async Task<IEnumerable<GetOrderDto>?> GetAllUserOrdersAsync(PaginationDto dto, string name)
+    {
+        try
+        {
+            return await api.FetchAsync<IEnumerable<GetOrderDto>>($"{_apicfg.Orders}/{name}/{dto?.PageSize ?? int.MaxValue}/{dto?.Page ?? 1}");
+        }
+        catch (HttpRequestException)
+        {
+            return null;
+        }
+    }
 }

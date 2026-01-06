@@ -1,8 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JWT.Algorithms;
-using JWT.Builder;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using TIN_PRO.Options;
 using TIN.Data.Entities;
 
@@ -12,15 +12,22 @@ public class AuthService(IOptions<JwtOptions> options) : IAuthService
 {
     public string GenerateToken(UserModel user)
     {
-        var token = new JwtBuilder()
-            .AddClaim(ClaimTypes.Name, user.Nickname)
-            .AddClaim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            .AddClaim(ClaimTypes.Role, user.Role.ToString())
-            .ExpirationTime(DateTimeOffset.UtcNow.AddMinutes(options.Value.ExpirationInMinutes).UtcDateTime)
-            .WithAlgorithm(new HMACSHA256Algorithm())
-            .WithSecret(Encoding.UTF8.GetBytes(options.Value.Key))
-            .Encode()!;
-        
-        return token;
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, user.Nickname),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.Key));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(options.Value.ExpirationInMinutes),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

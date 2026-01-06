@@ -20,6 +20,12 @@
             </NavLink>
             </AuthorizeView>
             
+            <AuthorizeView Roles="Administrator, Customer">
+                <NavLink class="nav-link" href="orders" Match="NavLinkMatch.All">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Your Orders
+                </NavLink>
+            </AuthorizeView>
+            
             <AuthorizeView Roles="Administrator">
             <NavLink class="nav-link" href="admin/orders" Match="NavLinkMatch.All">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> OrderPanel

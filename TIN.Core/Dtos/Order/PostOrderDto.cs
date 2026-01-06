@@ -8,10 +8,8 @@ public class PostOrderDto
     [Required]
     public DateTime OrderDate { get; init; }
     
-    [Required]
     public DateTime? CompletionDate { get; init; }
     
-    [Required]
     public OrderStatus? OrderStatus { get; init; }
     
     [Required]

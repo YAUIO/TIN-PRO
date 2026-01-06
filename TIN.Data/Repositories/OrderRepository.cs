@@ -40,4 +40,14 @@ public class OrderRepository(StoreDbContext context) : IOrderRepository
     {
         await context.Orders.AddAsync(order);
     }
+
+    public async Task<IEnumerable<OrderModel>> GetAllOrdersByUsernameAsync(string username)
+    {
+        return await context.Orders
+            .Include(o => o.Customer)
+            .Include(o => o.Items)
+            .ThenInclude(i => i.Product)
+            .Where(o => o.Customer.Nickname == username)
+            .ToListAsync();
+    }
 }

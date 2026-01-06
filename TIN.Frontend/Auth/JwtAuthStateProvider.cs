@@ -2,10 +2,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using TIN.Frontend.Cart;
 
 namespace TIN.Frontend.Auth;
 
-public class JwtAuthStateProvider(IJSRuntime js) : AuthenticationStateProvider
+public class JwtAuthStateProvider(IJSRuntime js, ICartService cart) : AuthenticationStateProvider
 {
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -47,6 +48,7 @@ public class JwtAuthStateProvider(IJSRuntime js) : AuthenticationStateProvider
     public async Task LogoutAsync()
     {
         await js.RemoveTokenAsync();
+        await cart.ClearCart();
         var state = await GetAuthenticationStateAsync();
         NotifyAuthenticationStateChanged(Task.FromResult(state));
     }

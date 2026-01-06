@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TIN.Core.Dtos.Product;
 using TIN.Core.Services;
@@ -24,18 +25,21 @@ public class ProductsController(IProductService service) : ControllerBase
         return Ok(await service.GetProductAsync(id));
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id:guid}")]
     public async Task RemoveProduct([FromRoute] Guid id)
     {
         await service.DeleteProductAsync(id);
     }
     
+    [Authorize(Policy = "Admin")]
     [HttpPut]
     public async Task UpdateProduct([FromBody] PutProductWrapperDto dto)
     {
         await service.UpdateProductAsync(dto);
     }
     
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddProduct([FromBody] PostProductWrapperDto dto)
     {

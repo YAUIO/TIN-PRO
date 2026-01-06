@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using TIN.Core.Dtos;
 using TIN.Core.Dtos.Order;
 using TIN.Core.Exceptions;
@@ -24,10 +25,14 @@ public class OrderService(IUnitOfWork uow) : IOrderService
         return [.. order.Items.Select(s => s.ToDto())];
     }
 
-    public async Task<GetOrderDto> GetOrderAsync(Guid orderId)
+    public async Task<GetOrderDto> GetOrderAsync(Guid orderId, ClaimsPrincipal user)
     {
         var order = await uow.Orders.GetOrderAsync(orderId)
             ?? throw new NotFoundException();
+
+        if (user.Identity == null || order.Customer.Nickname != user.Identity.Name)
+            throw new UnauthorizedAccessException();
+        
         return order.ToDto();
     }
 
@@ -83,5 +88,15 @@ public class OrderService(IUnitOfWork uow) : IOrderService
         uow.Orders.DeleteOrder(order);
 
         await uow.SaveChangesAsync();
+    }
+
+    public async Task<List<GetOrderDto>> GetAllUserOrdersAsync(string username, ClaimsPrincipal user, PaginationDto paginationDto)
+    {
+        if (user.Identity == null || username != user.Identity.Name)
+            throw new UnauthorizedAccessException();
+        
+        var orders = await uow.Orders.GetAllOrdersByUsernameAsync(username);
+        
+        return [.. orders.Select(s => s.ToDto())];
     }
 }

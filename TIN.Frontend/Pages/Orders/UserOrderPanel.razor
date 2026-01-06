@@ -1,0 +1,108 @@
+@inject IOrderFetcher Orders
+@inject JwtAuthStateProvider Auth
+
+@page "/orders"
+@using System.Net
+@using TIN.Core.Dtos
+@using TIN.Core.Dtos.Order
+@using TIN.Frontend.Api
+@using TIN.Frontend.Auth
+
+<AuthorizeView Roles="Customer">
+    <Authorized>
+    <PageTitle>Your Orders</PageTitle>
+
+    @code {
+        List<GetOrderDto>? _orders;
+
+        protected override async Task OnInitializedAsync()
+        {
+            var auth = await Auth.GetAuthenticationStateAsync();
+            
+            var orders = await Orders.GetAllUserOrdersAsync(_dto, auth.User.Identity!.Name!);
+
+            if (orders != null)
+                _orders = [.. orders];
+            else
+                _orders = [];
+        }
+
+        PaginationDto _dto = new();
+        
+        async Task Prev()
+        {
+            _dto.Page--;
+            if (_dto.Page <= 1) 
+                _dto.Page = 1;
+            await OnInitializedAsync();
+        }
+
+        async Task Next()
+        {
+            _dto.Page++;
+            await OnInitializedAsync();
+        }
+    }
+    
+    <EditForm Model="_dto">
+        <ChildContent Context="editContext">
+            <button class="btn btn-info" @onclick="Prev"> Previous </button>
+             @_dto.Page 
+            <button class="btn btn-info" @onclick="Next"> Next </button> <br/>
+                
+            <br/> <select class="form-select form-select-sm w-auto" @bind="_dto.PageSize" @bind:after="OnInitializedAsync">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="25">50</option>
+                <option value="@(int.MaxValue)">All</option> <br/>
+            </select>
+        </ChildContent>
+    </EditForm>
+
+    @if (_orders == null)
+    {
+        <p> Loading... </p>
+    }
+    else if (_orders.Count == 0)
+    {
+        <p> No orders yet :( </p>
+    }
+    else
+    {
+        
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="w-auto">Id</th>
+                <th class="w-auto">Order Date</th>
+                <th class="w-auto">Completion Date</th>
+                <th class="w-auto">Order Status</th>
+                <th class="w-auto">Customer</th>
+                <th class="w-auto"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var order in _orders)
+            {
+                <tr>
+                    <td><a href="order/@order.Id" class="h4"></a></td>
+                    <td>@order.OrderDate.ToShortDateString()</td>
+                    <td>@(order.CompletionDate?.ToShortDateString() ?? "Not completed")</td>
+                    <td>@order.OrderStatus</td>
+                    <td>@order.Customer.UserName</td>
+                    <td>
+                        <a class="btn btn-info" href="order/@order.Id">View</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

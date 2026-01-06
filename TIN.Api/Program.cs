@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
@@ -53,10 +54,20 @@ builder.Services.AddAuthentication("Bearer")
         options.TokenValidationParameters = new()
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role,
         };
     });
-builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Admin", policy =>
+        policy.RequireRole("Administrator"))
+    .AddPolicy("LoggedIn", policy => 
+        policy.RequireRole("Administrator", "Customer"));
 
 var app = builder.Build();
 

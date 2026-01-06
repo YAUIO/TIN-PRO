@@ -10,7 +10,7 @@ public static class StoreSeedingExtensions
     {
         Id = Guid.Parse("A02F8C91-7070-4EDE-B004-677D7515467E"),
         Nickname = "yauio",
-        PasswordHash = "AQAAAAIAAYagAAAAEFo6EfI9ET/TLT3NGJngLvqSimZLbaRCFgZcF5UcjkdGjM1UeYpVrbalm4RLYkrP7w==",
+        PasswordHash = "AQAAAAIAAYagAAAAEE+73d0BPjbmhj5JwZn+GguB0nPf5qMGuXTQenbtbcQqT3Vbs6b7PwaS49UYny2VYA==",
         Role = UserRole.Administrator
     };
     

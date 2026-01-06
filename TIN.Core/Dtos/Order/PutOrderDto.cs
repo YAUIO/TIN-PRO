@@ -11,7 +11,6 @@ public class PutOrderDto
     [Required]
     public DateTime OrderDate { get; set; }
     
-    [Required]
     public DateTime? CompletionDate { get; set; }
     
     [Required]

@@ -11,4 +11,6 @@ public interface IOrderFetcher
     Task<GetOrderDto?> GetOrderAsync(Guid id);
     
     Task<Guid> CreateOrder(List<CartItem> products, string customerName);
+    
+    Task<IEnumerable<GetOrderDto>?> GetAllUserOrdersAsync(PaginationDto dto, string name);
 }
