@@ -1,9 +1,12 @@
+@using System.Net
 @using TIN.Core.Dtos.User
 @using TIN.Frontend.Api
 @inject IUserFetcher Users
 
 @page "/user/{id:guid}"
 
+<AuthorizeView Roles="Admin">
+<Authorized>
 @code 
 {
     [Parameter]
@@ -76,3 +79,8 @@ else
         </tbody>
     </table>
 }
+</Authorized>
+<NotAuthorized>
+    @(HttpStatusCode.Unauthorized)
+</NotAuthorized>
+</AuthorizeView>

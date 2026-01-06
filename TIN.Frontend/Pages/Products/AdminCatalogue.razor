@@ -1,61 +1,71 @@
-﻿@using TIN.Core.Dtos.Product
+﻿@using System.Net
+@using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 
 @inject IProductFetcher ProductFetcher
 @page "/admin/products"
 
-<PageTitle>Admin Catalogue</PageTitle>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+    <PageTitle>Admin Catalogue</PageTitle>
 
-@code{
-    List<GetProductDto>? _products;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        var products = await ProductFetcher.GetAllProducts();
+    @code{
+        List<GetProductDto>? _products;
 
-        if (products != null)
-            _products = [.. products];
-        else
-            _products = [];
-    }
-}
-
-<a class="btn btn-success" href="products/add"> Add product </a>
-
-@if (_products == null)
-{
-    <p> Loading... </p>
-}
-else if (_products.Count == 0) {
-    <p> No products yet :( </p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="w-15">Name</th>
-            <th class="w-15">Image</th>
-            <th>Description</th>
-            <th class="w-15">Price</th>
-            <th class="w-auto"></th>
-        </tr>
-        </thead>
-        
-        <tbody>
-        @foreach (var product in _products)
+        protected override async Task OnInitializedAsync()
         {
-            <tr>
-                <td><a href="product/@product.ProductId" class="h4">@product.Name</a></td>
-                <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
-                <td>@(product.Description ?? "No description available.")</td>
-                <td>@product.Price $</td>
-                <td>
-                    <a class="btn btn-warning" href="product/@product.ProductId/edit">Edit product</a>
-                    <a class="btn btn-danger" href="product/@product.ProductId/delete/">Remove product</a>
-                </td>
-            </tr>
+            var products = await ProductFetcher.GetAllProducts();
+
+            if (products != null)
+                _products = [.. products];
+            else
+                _products = [];
         }
-        </tbody>
-    </table>
-}
+
+    }
+
+    <a class="btn btn-success" href="products/add"> Add product </a>
+
+    @if (_products == null)
+    {
+        <p> Loading... </p>
+    }
+    else if (_products.Count == 0)
+    {
+        <p> No products yet :( </p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="w-15">Name</th>
+                <th class="w-15">Image</th>
+                <th>Description</th>
+                <th class="w-15">Price</th>
+                <th class="w-auto"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var product in _products)
+            {
+                <tr>
+                    <td><a href="product/@product.ProductId" class="h4">@product.Name</a></td>
+                    <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
+                    <td>@(product.Description ?? "No description available.")</td>
+                    <td>@product.Price $</td>
+                    <td>
+                        <a class="btn btn-warning" href="product/@product.ProductId/edit">Edit product</a>
+                        <a class="btn btn-danger" href="product/@product.ProductId/delete/">Remove product</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

@@ -1,11 +1,22 @@
+using System.Text.Json;
+using TIN.Core.Dtos.User;
 using TIN.Frontend.Api;
 
 namespace TIN.Frontend.Auth;
 
-public class AuthApiService(IApiFetcher api)
+public class AuthApiService(IApiFetcher api, ILogger<AuthApiService> auth)
 {
-    public async Task<string> LoginAsync(string username, string password)
+    public async Task<string> LoginAsync(AuthUserDto dto)
     {
-        return await api.PostAsync("api/auth/login", new { username, password });
+        var token = await api.PostAsync("api/auth/login", dto);
+        
+        var jwt = JsonSerializer.Deserialize<TokenDto>(token, ApiFetcher.Options)!;
+        
+        return jwt.Token;
+    }
+
+    public async Task RegisterAsync(RegisterUserDto dto)
+    {
+        await api.PostAsync("api/auth/register", dto);
     }
 }

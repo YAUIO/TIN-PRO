@@ -1,3 +1,4 @@
+@using System.Net
 @using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 
@@ -7,62 +8,70 @@
 
 @page "/product/{Id:guid}/delete"
 
-@code{
-    [Parameter]
-    public Guid Id { get; init; }
-    
-    GetProductDto? _product;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        _product = await ProductFetcher.GetProduct(Id);
+<AuthorizeView Roles="Admin">
+    <Authorized>
+
+    @code{
+        [Parameter] public Guid Id { get; init; }
+
+        GetProductDto? _product;
+
+        protected override async Task OnInitializedAsync()
+        {
+            _product = await ProductFetcher.GetProduct(Id);
+        }
+
+        async Task RemoveProduct()
+        {
+            try
+            {
+                await ProductFetcher.RemoveProduct(Id);
+                await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success, 800);
+                Nav.NavigateTo("/admin/products");
+            }
+            catch (HttpRequestException e)
+            {
+                await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+            }
+        }
+
     }
 
-    async Task RemoveProduct()
+    <PageTitle>@(_product?.Name ?? "Error")</PageTitle>
+
+    @if (_product == null)
     {
-        try
-        {
-            await ProductFetcher.RemoveProduct(Id);
-            await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success, 800);
-            Nav.NavigateTo("/admin/products");
-        }
-        catch (HttpRequestException e)
-        {
-            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
-        }
+        <p> No such product </p>
     }
-}
+    else
+    {
+        <h1> Are you sure that you want to remove it? </h1>
 
-<PageTitle>@(_product?.Name ?? "Error")</PageTitle>
+        <h2>@_product.Name</h2>
+        <div>
+            <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
+            <h1>@_product.Price $ <button class="btn btn-danger" @onclick="RemoveProduct">Remove product</button></h1>
+        </div>
+        <p>@(_product.Description ?? "No description available.")</p>
+        <table class="table">
+            <thead>
+            <th></th>
+            <th></th>
+            </thead>
 
-@if (_product == null)
-{
-    <p> No such product </p>
-}
-else
-{
-    <h1> Are you sure that you want to remove it? </h1>
-    
-    <h2>@_product.Name</h2>
-    <div>
-        <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-        <h1>@_product.Price $ <button class="btn btn-danger" @onclick="RemoveProduct">Remove product</button></h1>
-    </div>
-    <p>@(_product.Description ?? "No description available.")</p>
-    <table class="table">
-        <thead>
-        <th></th>
-        <th></th>
-        </thead>
-        
-        <tbody>
-        @foreach (var spec in _product.Specs)
-        {
-            <tr>
-                <td>@spec.Key</td>
-                <td>@spec.Value</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+            <tbody>
+            @foreach (var spec in _product.Specs)
+            {
+                <tr>
+                    <td>@spec.Key</td>
+                    <td>@spec.Value</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

@@ -13,6 +13,13 @@ public static class UserMapping
         UserRole = model.Role,
         Orders = [.. model.Orders.Select(s => s.ToDto())],
     };
+    
+    public static GetUserDto ToDtoWithoutOrders(this UserModel model) => new()
+    {
+        UserId = model.Id,
+        UserName = model.Nickname,
+        UserRole = model.Role,
+    };
 
     public static UserModel ToModel(this PostUserDto dto) => new()
     {

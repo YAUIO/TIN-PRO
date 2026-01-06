@@ -4,6 +4,7 @@
 @using TIN.Core.Dtos.Order
 @using TIN.Frontend.Api
 
+
 @code{
     [Parameter]
     public Guid Id { get; init; }
@@ -30,7 +31,7 @@
             <th class="w-auto">Completion Date</th>
             <th class="w-auto">Order Status</th>
             <th class="w-auto">Customer</th>
-            <th class="w-auto"></th>
+            @*<th class="w-auto"></th>*@
         </tr>
         </thead>
 
@@ -41,18 +42,19 @@
             <td>@(_order.CompletionDate?.ToShortDateString() ?? "Not completed")</td>
             <td>@_order.OrderStatus</td>
             <td>@_order.Customer.UserName</td>
-            <td>
+            @*<td>
                 <a class="btn btn-warning" href="order/@_order.Id/edit">Edit</a>
                 <a class="btn btn-danger" href="order/@_order.Id/delete">Remove</a>
-            </td>
+            </td>*@
         </tr>
         </tbody>
     </table>
     
     <table class="table">
         <thead>
-        <th class="w-auto"> Product Id </th>
+        <th class="w-15"> Product Id </th>
         <th class="w-auto"> Product Name </th>
+        <th class="w-auto"> Product Image </th>
         <th class="w-auto"> Quantity </th>
         <th class="w-auto"> Total Price </th>
         </thead>
@@ -61,8 +63,9 @@
         @foreach (var item in _order.Products)
         {
             <tr>
-                <td><a class="h4" href="product/@item.Product.ProductId">@item.Product.ProductId</a></td>
+                <td><a href="product/@item.Product.ProductId">@item.Product.ProductId</a></td>
                 <td>@item.Product.Name</td>
+                <td><img alt="Image of @item.Product.Name" src="@item.Product.ImageUri" class="preview-image"></td>
                 <td>@item.Quantity</td>
                 <td>@(item.Product.Price * item.Quantity) $</td>
             </tr>

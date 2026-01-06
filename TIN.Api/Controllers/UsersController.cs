@@ -18,4 +18,11 @@ public class UsersController(IUserService users) : ControllerBase
     {
         return Ok(await users.GetUserAsync(id));
     }
+    
+    [HttpPut("{id:guid}/admin")]
+    public async Task<IActionResult> MakeAdminById([FromRoute] Guid id)
+    {
+        await users.MakeAdminById(id);
+        return NoContent();
+    }
 }

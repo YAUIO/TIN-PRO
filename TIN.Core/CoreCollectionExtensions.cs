@@ -15,6 +15,7 @@ public static class CoreCollectionExtensions
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ILocalizationService, LocalizationService>();
+        services.AddScoped<IUserService, UserService>();
         
         services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
         

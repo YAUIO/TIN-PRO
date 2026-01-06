@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace TIN.Frontend;
+namespace TIN.Frontend.Auth;
 
 public static class JsJwtTokenExtensions
 {

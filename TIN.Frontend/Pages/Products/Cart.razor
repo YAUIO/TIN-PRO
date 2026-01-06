@@ -1,10 +1,13 @@
-﻿@using TIN.Frontend.Api
+﻿@using TIN.Core.Exceptions
+@using TIN.Frontend.Api
+@using TIN.Frontend.Auth
 @using TIN.Frontend.Cart
 
 @inject ICartService CartService
 @inject IOrderFetcher Orders
 @inject NavigationManager Nav;
 @inject StatusService Status
+@inject JwtAuthStateProvider Auth
 
 @page "/cart"
 
@@ -43,13 +46,22 @@
 
     async Task Order()
     {
-        try {
-            var id = await Orders.CreateOrder(_products, "Guest"); // TODO Customer name from jwt
+        try
+        {
+            var data = await Auth.GetAuthenticationStateAsync();
+
+            if (data.User.Identity == null)
+                throw new BadRequestException();
+            
+            var id = await Orders.CreateOrder(_products, data.User.Identity.Name!);
             Nav.NavigateTo($"/order/{id}");
         }
         catch (HttpRequestException e)
         {
             await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+        } catch (BadRequestException)
+        {
+            await Status.SetStatusAsync("Log in required", StatusService.StatusType.Error);
         }
     }
 }
@@ -86,6 +98,14 @@ else
         }
         </tbody>
     </table>
-    <button class="align-content-center btn btn-success" @onclick="Order">Order</button>
+    
+    <AuthorizeView Roles="Customer, Admin">
+        <Authorized>
+        <button class="align-content-center btn btn-success" @onclick="Order">Order</button>
+        </Authorized>
+        <NotAuthorized>
+            <h5>Please <a href="authentication/login">log in</a> first</h5>
+        </NotAuthorized>
+    </AuthorizeView>
     <button class="align-content-center btn btn-danger" @onclick="Clear">Clear cart</button>
 }

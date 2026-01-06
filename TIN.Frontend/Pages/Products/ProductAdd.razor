@@ -69,14 +69,18 @@
 else
 {
     <EditForm OnValidSubmit="EditProductAsync" OnInvalidSubmit="HandleInvalidSubmitAsync" Model="_product">
-        <DataAnnotationsValidator />
-        
-        <ValidationSummary />
-        
-        <InputText class="form-control h2" @bind-Value="_product.Name"> Name </InputText>
+        <ChildContent Context="editContext">
+        <DataAnnotationsValidator/>
+
+        <ValidationSummary/>
+
+        <label class="h4"> Name </label>
+        <InputText class="form-control h2" @bind-Value="_product.Name"> </InputText>
         <div>
-            <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-            <InputText class="form-control h4" @bind-Value="_product.ImageUri"> Image </InputText>
+            <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri"> <br/><br/>
+            <label class="h4"> Image Link </label>
+            <InputText class="form-control h4" @bind-Value="_product.ImageUri"> </InputText>
+            <label class="h4"> Price </label>
             <InputNumber class="form-control h1" @bind-Value="_product.Price"> Price </InputNumber>
         </div>
         <table class="table">
@@ -99,5 +103,6 @@ else
         </table>
         <button type="button" class="btn btn-warning" @onclick="AddSpec"> Add new spec </button> <br/> <br/>
         <button type="submit" class="btn btn-success"> Save </button>
+        </ChildContent>
     </EditForm>
 }

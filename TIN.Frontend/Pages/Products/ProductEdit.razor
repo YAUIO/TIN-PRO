@@ -4,115 +4,141 @@
 @inject StatusService Status
 
 @page "/product/{Id:guid}/edit"
+@using System.Net
 @using TIN.Core.Dtos.Product
 @using TIN.Core.Exceptions
 @using TIN.Frontend.Api
 
-@code{
-    [Parameter] public Guid Id { get; init; }
+<AuthorizeView Roles="Admin">
+    <Authorized>
+    @code{
+        [Parameter] public Guid Id { get; init; }
 
-    PutProductDto? _product;
-    GetProductDto? _getDto;
+        PutProductDto? _product;
+        GetProductDto? _getDto;
 
-    List<PostSpecDto> _specs = [];
+        readonly List<PostSpecDto> _specs = [];
 
-    protected override async Task OnInitializedAsync()
-    {
-        _getDto = await ProductFetcher.GetProduct(Id);
-        
-        if (_getDto != null)
-            _product = new()
-            {
-                ProductId = _getDto.ProductId,
-                Name = _getDto.Name,
-                ImageUri = _getDto.ImageUri,
-                Price = _getDto.Price,
-            };
-    }
-
-    async Task EditProductAsync()
-    {
-        try
+        protected override async Task OnInitializedAsync()
         {
-            if (_specs.Count + _getDto!.Specs.Count == 0)
-                throw new BadRequestException();
+            _getDto = await ProductFetcher.GetProduct(Id);
 
-            var dto = new PutProductWrapperDto()
-            {
-                Product = _product!,
-                UpdateSpecs = _getDto!.Specs,
-                CreateSpecs = _specs,
-            };
-            
-            await ProductFetcher.UpdateProductAsync(dto);
+            if (_getDto != null)
+                _product = new PutProductDto
+                {
+                    ProductId = _getDto.ProductId,
+                    Name = _getDto.Name,
+                    ImageUri = _getDto.ImageUri,
+                    Price = _getDto.Price
+                };
         }
-        catch (HttpRequestException e)
+
+        async Task EditProductAsync()
         {
-            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
-        } catch (BadRequestException)
-        {
-            await Status.SetStatusAsync("Specs can't be empty", StatusService.StatusType.Error);
+            try
+            {
+                if (_specs.Count + _getDto!.Specs.Count == 0)
+                    throw new BadRequestException();
+
+                var dto = new PutProductWrapperDto
+                {
+                    Product = _product!,
+                    UpdateSpecs = _getDto!.Specs,
+                    CreateSpecs = _specs
+                };
+
+                await ProductFetcher.UpdateProductAsync(dto);
+            }
+            catch (HttpRequestException e)
+            {
+                await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+            }
+            catch (BadRequestException)
+            {
+                await Status.SetStatusAsync("Specs can't be empty", StatusService.StatusType.Error);
+            }
         }
+
+        void AddSpec()
+        {
+            _specs.Add(new PostSpecDto());
+        }
+
+        async Task HandleInvalidSubmitAsync()
+        {
+            await Status.SetStatusAsync("Invalid submit", StatusService.StatusType.Error);
+        }
+
     }
 
-    void AddSpec()
+    <PageTitle>@(_product?.Name ?? "Error")</PageTitle>
+
+    @if (_product == null || _getDto == null)
     {
-        _specs.Add(new());
+        <p> No such product </p>
     }
-
-    async Task HandleInvalidSubmitAsync()
+    else
     {
-        await Status.SetStatusAsync("Invalid submit", StatusService.StatusType.Error);
+        <EditForm OnValidSubmit="EditProductAsync" OnInvalidSubmit="HandleInvalidSubmitAsync" Model="_product">
+            <ChildContent Context="editContext">
+            <DataAnnotationsValidator/>
+
+            <ValidationSummary/>
+
+            <InputText class="form-control h2" @bind-Value="_product.Name"></InputText>
+            <div>
+                <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
+                <InputText class="form-control h4" @bind-Value="_product.ImageUri"></InputText>
+                <InputNumber class="form-control h1" @bind-Value="_product.Price"></InputNumber>
+            </div>
+            <a class="btn btn-warning" href="localization/@_product.ProductId">Edit localization</a>
+            <table class="table">
+                <thead>
+                <th class="w-auto"></th>
+                <th class="w-auto"></th>
+                <th class="w-auto"></th>
+                </thead>
+
+                <tbody>
+                @foreach (var spec in _getDto.Specs.ToList())
+                {
+                    <tr>
+                        <td>@spec.Key</td>
+                        <td>
+                            <InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+                @foreach (var spec in _specs)
+                {
+                    <tr>
+                        <td>
+                            <InputText class="form-control" @bind-Value="spec.Key">@spec.Key</InputText>
+                        </td>
+                        <td>
+                            <InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="() => _specs.Remove(spec)"> Remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-warning" @onclick="AddSpec"> Add new spec</button>
+            <br/> <br/>
+            <button type="submit" class="btn btn-success"> Save</button>
+            </ChildContent>
+        </EditForm>
     }
-}
-
-<PageTitle>@(_product?.Name ?? "Error")</PageTitle>
-
-@if (_product == null || _getDto == null)
-{
-    <p> No such product </p>
-}
-else
-{
-    <EditForm OnValidSubmit="EditProductAsync" OnInvalidSubmit="HandleInvalidSubmitAsync" Model="_product">
-        <DataAnnotationsValidator />
-        
-        <ValidationSummary />
-        
-        <InputText class="form-control h2" @bind-Value="_product.Name"></InputText>
-        <div>
-            <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-            <InputText class="form-control h4" @bind-Value="_product.ImageUri"></InputText>
-            <InputNumber class="form-control h1" @bind-Value="_product.Price"></InputNumber>
-        </div>
-        <a class="btn btn-warning" href="localization/@_product.ProductId">Edit localization</a>
-        <table class="table">
-            <thead>
-            <th class="w-auto"></th>
-            <th class="w-auto"></th>
-            <th class="w-auto"></th>
-            </thead>
-
-            <tbody>
-            @foreach (var spec in _getDto.Specs.ToList())
-            {
-                <tr>
-                    <td>@spec.Key</td>
-                    <td><InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText></td>
-                    <td><button type="button" class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)"> Remove </button></td>
-                </tr>
-            }
-            @foreach (var spec in _specs)
-            {
-                <tr>
-                    <td><InputText class="form-control" @bind-Value="spec.Key">@spec.Key</InputText></td>
-                    <td><InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText></td>
-                    <td><button type="button" class="btn btn-danger" @onclick="() => _specs.Remove(spec)"> Remove </button></td>
-                </tr>
-            }
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-warning" @onclick="AddSpec"> Add new spec </button> <br/> <br/>
-        <button type="submit" class="btn btn-success"> Save </button>
-    </EditForm>
-}
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

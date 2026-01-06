@@ -12,9 +12,9 @@ public class AuthUserDto
     
     [Required]
     [Length(MinUserNameLength, MaxUserNameLength)]
-    public string UserName { get; init; }
+    public string UserName { get; set; }
     
     [Required]
     [Length(MinPasswordLength, MaxPasswordLength)]
-    public string Password { get; init; }
+    public string Password { get; set; }
 }

@@ -1,55 +1,65 @@
 @page "/admin/localizations/"
+@using System.Net
 @using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 
 @inject IProductFetcher Products;
 
-<PageTitle>Localizations</PageTitle>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+    <PageTitle>Localizations</PageTitle>
 
-@code{
-    List<GetProductDto>? _products;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        var products = await Products.GetAllProducts();
+    @code{
+        List<GetProductDto>? _products;
 
-        if (products != null)
-            _products = [.. products];
-        else
-            _products = [];
-    }
-}
-
-@if (_products == null)
-{
-    <p> Loading... </p>
-}
-else if (_products.Count == 0) {
-    <p> No products yet :( </p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="w-15">Name</th>
-            <th class="w-15">Image</th>
-            <th>Description</th>
-            <th class="w-15">Price</th>
-            <th class="w-auto"></th>
-        </tr>
-        </thead>
-        
-        <tbody>
-        @foreach (var product in _products)
+        protected override async Task OnInitializedAsync()
         {
-            <tr>
-                <td><a href="localization/@product.ProductId" class="h4">@product.Name</a></td>
-                <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
-                <td>@(product.Description ?? "No description available.")</td>
-                <td>@product.Price $</td>
-            </tr>
+            var products = await Products.GetAllProducts();
+
+            if (products != null)
+                _products = [.. products];
+            else
+                _products = [];
         }
-        </tbody>
-    </table>
-}
+
+    }
+
+    @if (_products == null)
+    {
+        <p> Loading... </p>
+    }
+    else if (_products.Count == 0)
+    {
+        <p> No products yet :( </p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="w-15">Name</th>
+                <th class="w-15">Image</th>
+                <th>Description</th>
+                <th class="w-15">Price</th>
+                <th class="w-auto"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var product in _products)
+            {
+                <tr>
+                    <td><a href="localization/@product.ProductId" class="h4">@product.Name</a></td>
+                    <td><img class="preview-image" alt="Image of @product.Name" src="@product.ImageUri"></td>
+                    <td>@(product.Description ?? "No description available.")</td>
+                    <td>@product.Price $</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

@@ -24,9 +24,12 @@ builder.Services.AddHttpClient<IApiFetcher, ApiFetcher>(client =>
     .AddStandardResilienceHandler();
 
 // Auth
-builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>();
+builder.Services.AddScoped<JwtAuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
+    sp.GetRequiredService<JwtAuthStateProvider>());
 builder.Services.AddScoped<JwtHandler>();
+builder.Services.AddScoped<AuthApiService>();
+builder.Services.AddAuthorizationCore();
 
 // Api
 builder.Services.AddScoped<IProductFetcher, ProductFetcher>();

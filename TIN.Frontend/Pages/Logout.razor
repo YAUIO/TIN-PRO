@@ -1,0 +1,15 @@
+@page "/authentication/logout"
+@using TIN.Frontend.Auth
+
+@inject JwtAuthStateProvider Jwt
+@inject NavigationManager Nav
+
+<h3>Login</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Jwt.LogoutAsync();
+        Nav.NavigateTo("/");
+    }
+}

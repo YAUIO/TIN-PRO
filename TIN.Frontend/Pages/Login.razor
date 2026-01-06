@@ -1,0 +1,42 @@
+@page "/authentication/login"
+@using TIN.Core.Dtos.User
+@using TIN.Frontend.Auth
+
+@inject AuthApiService Auth
+@inject JwtAuthStateProvider Jwt
+@inject NavigationManager Nav
+@inject StatusService Status
+
+<h3>Login</h3>
+
+@code {
+    AuthUserDto _dto = new();
+
+    async Task LoginAsync()
+    {
+        try
+        {
+            var token = await Auth.LoginAsync(_dto);
+            await Jwt.LoginAsync(token);
+            Nav.NavigateTo("/");
+        }
+        catch (HttpRequestException e)
+        {
+            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+        }
+    }
+}
+
+<EditForm Model="_dto" OnValidSubmit="LoginAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+
+    <label> Username </label>
+    <InputText class="form-control" @bind-Value="_dto.UserName"> </InputText>
+    
+    <label> Password </label>
+    <InputText class="form-control" @bind-Value="_dto.Password" type="password"> </InputText>
+</EditForm>
+
+<br/>
+<button class="btn btn-success" @onclick="LoginAsync"> Login </button> 

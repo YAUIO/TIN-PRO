@@ -13,7 +13,7 @@ public static class OrderMapping
         OrderDate = model.CreatedAt,
         CompletionDate = model.CompletedAt,
         OrderStatus = model.Status,
-        Customer = model.Customer.ToDto(),
+        Customer = model.Customer.ToDtoWithoutOrders(),
         Products = [.. model.Items.Select(s => s.ToDto())],
     };
 

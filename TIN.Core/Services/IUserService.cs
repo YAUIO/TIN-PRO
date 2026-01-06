@@ -9,11 +9,13 @@ public interface IUserService
 
     Task<GetUserDto> GetUserAsync(Guid userId);
     
-    Task<Guid> AddUserAsync(PostUserDto user);
+    Task<Guid> AddUserAsync(RegisterUserDto user);
     
     Task UpdateUserAsync(PutUserDto user);
     
     Task DeleteUserAsync(Guid id);
     
     Task<string> LoginUserAsync(AuthUserDto user);
+    
+    Task MakeAdminById(Guid id);
 }

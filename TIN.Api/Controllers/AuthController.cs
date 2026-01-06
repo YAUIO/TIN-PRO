@@ -6,12 +6,19 @@ namespace TIN_PRO.Controllers;
 
 [ApiController]
 [Route($"{ApiConstants.BaseApiUri}/[controller]")]
-public class AuthController(UserService service) : ControllerBase
+public class AuthController(IUserService service) : ControllerBase
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login(AuthUserDto dto)
     {
         var token = await service.LoginUserAsync(dto);
         return Ok(new { token });
+    }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterUserDto dto)
+    {
+        await service.AddUserAsync(dto);
+        return NoContent();
     }
 }

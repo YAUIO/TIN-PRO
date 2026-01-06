@@ -1,55 +1,80 @@
 @inject IUserFetcher Users
+@inject StatusService Status
 
 @page "/admin/users"
+@using System.Net
 @using TIN.Core.Dtos.User
 @using TIN.Frontend.Api
 
 <PageTitle>Admin User Panel</PageTitle>
 
-@code {
-    List<GetUserDto>? _users;
+<AuthorizeView Roles="Admin">
+    <Authorized>
 
-    protected override async Task OnInitializedAsync()
-    {
-        var users = await Users.GetAllUsersAsync();
+    @code {
+        List<GetUserDto>? _users;
 
-        if (users == null)
-            _users = [];
-        else
-            _users = [.. users];
-    }
-}
-
-@if (_users == null)
-{
-    <p> Loading... </p>
-} else if (_users.Count == 0)
-{
-    <p> No users here :( </p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <th class="w-auto"> Name </th>
-        <th class="w-auto"> Role </th>
-        <th class="w-auto"></th>
-        <th class="w-auto"></th>
-        </thead>
-        
-        <tbody>
-        @foreach (var user in _users)
+        protected override async Task OnInitializedAsync()
         {
-            <tr>
-                <td>@user.UserName</td>
-                <td>@user.UserRole</td>
-                <td>
-                    <a class="btn btn-info" href="user/@user.UserId"> View </a>
-                    <a class="btn btn-info" href="user/@user.UserId/edit"> Edit </a>
-                    <a class="btn btn-info" href="user/@user.UserId/delete"> Remove </a>
-                </td>
-            </tr>
+            var users = await Users.GetAllUsersAsync();
+
+            if (users == null)
+                _users = [];
+            else
+                _users = [.. users];
         }
-        </tbody>
-    </table>
-}
+
+        async Task MakeAdmin(Guid id)
+        {
+            try
+            {
+                await Users.MakeAdminAsync(id);
+            }
+            catch (HttpRequestException e)
+            {
+                await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+            }
+        }
+
+    }
+
+    @if (_users == null)
+    {
+        <p> Loading... </p>
+    }
+    else if (_users.Count == 0)
+    {
+        <p> No users here :( </p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <th class="w-auto"> Name </th>
+            <th class="w-auto"> Role </th>
+            <th class="w-auto"></th>
+            <th class="w-auto"></th>
+            </thead>
+
+            <tbody>
+            @foreach (var user in _users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.UserRole</td>
+                    <td>
+                        <a class="btn btn-info" href="user/@user.UserId"> View </a>
+                        <button class="btn btn-info" onclick="@(() => MakeAdmin(user.UserId))"> Make admin </button>
+                        @*<a class="btn btn-info" href="user/@user.UserId/edit"> Edit </a>
+                    <a class="btn btn-info" href="user/@user.UserId/delete"> Remove </a>*@
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </Authorized>
+    <NotAuthorized>
+        @(HttpStatusCode.Unauthorized)
+    </NotAuthorized>
+</AuthorizeView>

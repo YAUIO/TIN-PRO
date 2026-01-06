@@ -31,4 +31,9 @@ public class UserFetcher(IOptions<ApiOptions> options, IApiFetcher api) : IUserF
             return null;
         }
     }
+
+    public async Task MakeAdminAsync(Guid id)
+    {
+        await api.UpdateAsync($"{_apicfg.Users}/{id}/admin", new {});
+    }
 }
