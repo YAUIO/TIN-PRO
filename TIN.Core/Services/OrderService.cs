@@ -33,6 +33,10 @@ public class OrderService(IUnitOfWork uow) : IOrderService
 
     public async Task<Guid> AddOrderAsync(PostOrderDto order)
     {
+        var now = DateTime.UtcNow;
+        if (order.OrderDate > order.CompletionDate || order.OrderDate > now || order.CompletionDate > now)
+            throw new BadRequestException();
+        
         var model = order.ToModel();
         model.Customer = await uow.Users.GetUserAsync(order.CustomerName) 
             ?? throw new BadRequestException();
@@ -52,6 +56,10 @@ public class OrderService(IUnitOfWork uow) : IOrderService
 
     public async Task UpdateOrderAsync(PutOrderDto order)
     {
+        var now = DateTime.UtcNow;
+        if (order.OrderDate > order.CompletionDate || order.OrderDate > now || order.CompletionDate > now)
+            throw new BadRequestException();
+        
         var model = await uow.Orders.GetOrderAsync(order.Id)
             ?? throw new BadRequestException();
         model.Customer = await uow.Users.GetUserAsync(order.CustomerId)

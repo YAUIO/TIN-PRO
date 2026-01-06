@@ -20,21 +20,4 @@ public static class UserMapping
         UserName = model.Nickname,
         UserRole = model.Role,
     };
-
-    public static UserModel ToModel(this PostUserDto dto) => new()
-    {
-        Nickname = dto.UserName,
-        Role = dto.UserRole,
-    };
-    
-    public static UserModel UpdateWithDto(this UserModel model, PutUserDto dto)
-    {
-        if (model.Id != dto.UserId)
-            throw new ArgumentException("User Id doesn't match");
-        
-        model.Nickname = dto.UserName;
-        model.Role = dto.UserRole;
-        
-        return model;
-    }
 }

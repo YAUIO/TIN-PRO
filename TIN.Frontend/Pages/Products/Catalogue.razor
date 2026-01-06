@@ -66,10 +66,11 @@ else
     <EditForm Model="_dto">
         <ChildContent Context="editContext">
             <button class="btn btn-info" @onclick="Prev"> Previous </button>
-             @_dto.Page 
+            @_dto.Page
             <button class="btn btn-info" @onclick="Next"> Next </button> <br/>
-                
-            <br/> <select class="form-select form-select-sm w-auto" @bind="_dto.PageSize" @bind:after="OnInitializedAsync">
+
+            <br/>
+            <select class="form-select form-select-sm w-auto" @bind="_dto.PageSize" @bind:after="OnInitializedAsync">
                 <option value="1">1</option>
                 <option value="5">5</option>
                 <option value="10">10</option>

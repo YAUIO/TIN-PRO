@@ -13,6 +13,7 @@ public class PutProductDto
     [Length(MinStringLength, MaxStringLength)]
     public string Name { get; set; }
     
+    [Required]
     [Length(MinStringLength, MaxStringLength)]
     public string ImageUri { get; set; }
         

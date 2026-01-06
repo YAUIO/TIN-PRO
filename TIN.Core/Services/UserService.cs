@@ -30,6 +30,12 @@ public class UserService(IUnitOfWork uow, IPasswordHasher<UserModel> hasher, IAu
 
     public async Task<Guid> AddUserAsync(RegisterUserDto user)
     {
+        if (user.Password != user.PasswordRepeat)
+            throw new BadRequestException();
+
+        if (await uow.Users.GetUserAsync(user.UserName) != null)
+            throw new BadRequestException();
+        
         var model = new UserModel()
         {
             Nickname = user.UserName,
@@ -43,18 +49,6 @@ public class UserService(IUnitOfWork uow, IPasswordHasher<UserModel> hasher, IAu
         await uow.SaveChangesAsync();
         
         return model.Id;
-    }
-
-    public async Task UpdateUserAsync(PutUserDto user)
-    {
-        var model = await uow.Users.GetUserAsync(user.UserId)
-            ?? throw new BadRequestException();
-        
-        model.UpdateWithDto(user);
-        
-        await uow.Users.AddUserAsync(model);
-
-        await uow.SaveChangesAsync();
     }
 
     public async Task DeleteUserAsync(Guid id)
