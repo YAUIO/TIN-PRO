@@ -112,7 +112,7 @@ public static class StoreSeedingExtensions
                         {
                             Id = Guid.Parse("269eff68-b9f5-4894-9949-b915a36813a1"),
                             Name = "Długość",
-                            Language = Language.English,
+                            Language = Language.Polish,
                             SpecId = Guid.Parse("0893119b-0569-4eb3-a260-cfbc0f73c976")
                         }
                     ]
