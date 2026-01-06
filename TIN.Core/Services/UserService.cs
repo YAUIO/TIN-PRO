@@ -88,7 +88,10 @@ public class UserService(IUnitOfWork uow, IPasswordHasher<UserModel> hasher, IAu
         if (user.Role == UserRole.Guest)
             throw new BadRequestException();
         
-        user.Role = UserRole.Administrator;
+        user.Role = 
+            user.Role == UserRole.Administrator ? 
+                UserRole.Customer :
+                UserRole.Administrator;
 
         await uow.SaveChangesAsync();
     }

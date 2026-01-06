@@ -96,6 +96,8 @@ public class OrderService(IUnitOfWork uow) : IOrderService
             throw new UnauthorizedAccessException();
         
         var orders = await uow.Orders.GetAllOrdersByUsernameAsync(username);
+
+        orders = orders.Paginate(paginationDto);
         
         return [.. orders.Select(s => s.ToDto())];
     }

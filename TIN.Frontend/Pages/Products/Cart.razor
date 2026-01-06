@@ -54,6 +54,9 @@
                 throw new BadRequestException();
             
             var id = await Orders.CreateOrder(_products, data.User.Identity.Name!);
+
+            await CartService.ClearCart();
+            
             Nav.NavigateTo($"/order/{id}");
         }
         catch (HttpRequestException e)

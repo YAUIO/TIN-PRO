@@ -5,6 +5,7 @@
 @using System.Net
 @using TIN.Core.Dtos
 @using TIN.Core.Dtos.User
+@using TIN.Data.Entities.Enums
 @using TIN.Frontend.Api
 
 <PageTitle>Admin User Panel</PageTitle>
@@ -98,7 +99,7 @@
                     <td>@user.UserRole</td>
                     <td>
                         <a class="btn btn-info" href="user/@user.UserId"> View </a>
-                        <button class="btn btn-info" onclick="@(() => MakeAdmin(user.UserId))"> Make admin </button>
+                        <button class="btn btn-info" onclick="@(() => MakeAdmin(user.UserId))"> @(user.UserRole == UserRole.Administrator ? "Make customer" : "Make administrator") </button>
                         @*<a class="btn btn-info" href="user/@user.UserId/edit"> Edit </a>
                     <a class="btn btn-info" href="user/@user.UserId/delete"> Remove </a>*@
                     </td>
