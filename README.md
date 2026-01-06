@@ -41,4 +41,4 @@ dotnet run --project TIN.Frontend
 // serve
 python3 -m http.server 5221
 ```
-Backend connection string is in TIN.Api/appsettings.json
+Backend connection string is in TIN.Frontend/wwwroot/appsettings.json
