@@ -1,4 +1,4 @@
-Fullstack PC Store project using ASP.NET, Blazor and EF Core, featuring JWT Auth
+Fullstack PC Store project using ASP.NET, Blazor and EF Core, featuring JWT Auth and role-based access (both front- and back- end)
 
 SQLite was more of a requirement, than a choice
 
