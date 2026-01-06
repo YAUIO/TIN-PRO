@@ -144,6 +144,9 @@ namespace TIN.Data.Migrations
 
                     b.HasIndex("SpecId");
 
+                    b.HasIndex("Language", "Name", "SpecId")
+                        .IsUnique();
+
                     b.ToTable("SpecNames", (string)null);
                 });
 

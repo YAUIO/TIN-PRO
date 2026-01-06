@@ -11,6 +11,9 @@ public class SpecNameEntityConfiguration : IEntityTypeConfiguration<SpecNameMode
 
         builder.HasKey(s => s.Id);
 
+        builder.HasIndex(s => new { s.Language, s.Name, s.SpecId })
+            .IsUnique(true);
+
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
         
