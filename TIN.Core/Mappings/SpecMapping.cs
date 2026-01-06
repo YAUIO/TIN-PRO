@@ -1,7 +1,9 @@
 using System.Globalization;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Localization;
 using TIN.Core.Dtos.Product;
 using TIN.Data.Entities;
+using TIN.Data.Entities.Enums;
 
 namespace TIN.Core.Mappings;
 
@@ -14,5 +16,33 @@ public static class SpecMapping
             .Select(s => s.Name)
             .FirstOrDefault(model.Names.First(s => s.Language == CultureInfo.DefaultThreadCurrentUICulture!.TwoLetterISOLanguageName.ToLanguageEnum()).Name),
         Value = model.Value,
+    };
+
+    public static SpecModel ToModel(this PostSpecDto dto, ProductModel product)
+    {
+        var model = new SpecModel
+        {
+            Value = dto.Value,
+            Product = product,
+        };
+
+        model.Names =
+        [
+            new()
+            {
+                Language = Language.English,
+                Name = dto.Key,
+                Spec = model,
+            }
+        ];
+
+        return model;
+    }
+
+    public static GetSpecNameDto ToDto(this SpecNameModel model) => new()
+    {
+        Language = model.Language,
+        SpecId = model.Spec.Id,
+        Name = model.Name,
     };
 }

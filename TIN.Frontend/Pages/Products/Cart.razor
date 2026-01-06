@@ -42,7 +42,7 @@
 
     async Task Order()
     {
-        var id = await Orders.CreateOrder(_products, Guid.NewGuid()); // TODO Customer ID from jwt
+        var id = await Orders.CreateOrder(_products, "Guest"); // TODO Customer name from jwt
         Nav.NavigateTo($"/order/{id}");
     }
 }

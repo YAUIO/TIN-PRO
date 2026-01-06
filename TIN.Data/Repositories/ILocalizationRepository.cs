@@ -12,4 +12,8 @@ public interface ILocalizationRepository
     Task<SpecNameModel?> GetSpecName(string name, Language language);
     
     void DeleteSpecName(SpecNameModel specName);
+    
+    Task<IEnumerable<SpecNameModel>> GetProductSpecNames(Guid productId);
+    
+    Task<IEnumerable<ProductDescriptionModel>> GetProductDescriptions(Guid productId);
 }

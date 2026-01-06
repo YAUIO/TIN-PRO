@@ -31,7 +31,7 @@ public class OrderService(IUnitOfWork uow) : IOrderService
     public async Task<Guid> AddOrderAsync(PostOrderDto order)
     {
         var model = order.ToModel();
-        model.Customer = await uow.Users.GetUserAsync(order.CustomerId) 
+        model.Customer = await uow.Users.GetUserAsync(order.CustomerName) 
             ?? throw new BadRequestException();
         
         await uow.Orders.AddOrderAsync(model);

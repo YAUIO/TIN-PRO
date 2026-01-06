@@ -30,7 +30,7 @@ public class SpecFetcher(IOptions<ApiOptions> options, IApiFetcher api) : ISpecF
             JsonSerializer.Deserialize<List<Guid>>(json, Options)!;
     }
 
-    public async Task UpdateSpecsAsync(List<GetSpecDto> specs)
+    public async Task UpdateSpecsAsync(PutSpecsDto specs)
     {
         await api.UpdateAsync(_apicfg.Specs, specs);
     }

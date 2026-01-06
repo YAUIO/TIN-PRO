@@ -1,5 +1,6 @@
 using System.Globalization;
 using TIN.Core.Dtos;
+using TIN.Core.Dtos.Localization;
 using TIN.Core.Dtos.Product;
 using TIN.Data.Entities;
 
@@ -36,4 +37,11 @@ public static class ProductMapping
         
         return model;
     }
+
+    public static GetProductDescriptionDto ToDto(this ProductDescriptionModel model) => new()
+    {
+        Description = model.Description,
+        Language = model.Language,
+        ProductId = model.ProductId,
+    };
 }

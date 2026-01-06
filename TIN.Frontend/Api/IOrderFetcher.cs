@@ -9,5 +9,5 @@ public interface IOrderFetcher
 
     Task<GetOrderDto?> GetOrderAsync(Guid id);
     
-    Task<Guid> CreateOrder(List<CartItem> products, Guid customerId);
+    Task<Guid> CreateOrder(List<CartItem> products, string customerName);
 }

@@ -32,7 +32,11 @@
     {
         var specs = await SpecFetcher.CreateAllSpecsAsync(_specs);
 
-        await SpecFetcher.UpdateSpecsAsync(_getDto!.Specs);
+        await SpecFetcher.UpdateSpecsAsync(new()
+        {
+            Specs = _getDto!.Specs,
+            ProductId = _product!.ProductId,
+        });
         
         specs.AddRange(_getDto!.Specs.Select(s => s.Id));
 
@@ -45,7 +49,11 @@
 
     void AddSpec()
     {
-        _specs.Add(new());
+        var dto = new PostSpecDto
+        {
+            ProductId = _product!.ProductId
+        };
+        _specs.Add(dto);
     }
 }
 

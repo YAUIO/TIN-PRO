@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TIN.Data.Context;
 using TIN.Data.Entities;
 using TIN.Data.Entities.Enums;
@@ -24,5 +25,20 @@ public class LocalizationRepository(StoreDbContext context) : ILocalizationRepos
     public void DeleteSpecName(SpecNameModel specName)
     {
         context.SpecNames.Remove(specName);
+    }
+
+    public async Task<IEnumerable<SpecNameModel>> GetProductSpecNames(Guid productId)
+    {
+        return await context.Specs
+            .Where(s => s.Product.Id == productId)
+            .SelectMany(s => s.Names)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ProductDescriptionModel>> GetProductDescriptions(Guid productId)
+    {
+        return await context.ProductDescriptions
+            .Where(s => s.Product.Id == productId)
+            .ToListAsync();
     }
 }

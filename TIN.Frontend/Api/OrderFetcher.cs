@@ -34,14 +34,14 @@ public class OrderFetcher(IOptions<ApiOptions> options, IApiFetcher api) : IOrde
         }
     }
 
-    public async Task<Guid> CreateOrder(List<CartItem> products, Guid customerId)
+    public async Task<Guid> CreateOrder(List<CartItem> products, string customerName)
     {
         var dto = new PostOrderDto()
         {
             OrderDate = DateTime.UtcNow,
             CompletionDate = null,
             OrderStatus = OrderStatus.Created,
-            CustomerId = customerId,
+            CustomerName = customerName,
             Products = [.. products.Select(p => new PostOrderItemDto()
             {
                 ProductId = p.ProductId,

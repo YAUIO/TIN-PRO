@@ -10,7 +10,7 @@ public class PostOrderDto
     
     public OrderStatus? OrderStatus { get; init; }
     
-    public Guid CustomerId { get; init; }
+    public string CustomerName { get; init; }
     
     public ICollection<PostOrderItemDto> Products { get; init; } = [];
 }

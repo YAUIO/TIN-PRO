@@ -12,4 +12,14 @@ public class SpecRepository(StoreDbContext context) : ISpecRepository
             .Where(s => ids.Contains(s.Id))
             .ToListAsync();
     }
+
+    public async Task AddRangeAsync(IEnumerable<SpecModel> models)
+    {
+        await context.Specs.AddRangeAsync(models);
+    }
+
+    public void RemoveRange(IEnumerable<SpecModel> toRemove)
+    {
+        context.Specs.RemoveRange(toRemove);
+    }
 }

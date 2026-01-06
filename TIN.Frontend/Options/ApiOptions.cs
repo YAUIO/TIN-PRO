@@ -12,4 +12,5 @@ public class ApiOptions
     
     public string Specs { get; init; }
     
+    public string Auth { get; init; }
 }

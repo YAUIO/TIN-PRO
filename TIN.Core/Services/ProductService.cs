@@ -1,11 +1,10 @@
-using System.Globalization;
 using Microsoft.Extensions.Logging;
-using TIN.Core.Dtos;
 using TIN.Core.Dtos.Order;
 using TIN.Core.Dtos.Product;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
 using TIN.Data.Context;
+using TIN.Data.Entities.Enums;
 
 namespace TIN.Core.Services;
 
@@ -37,6 +36,19 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
         var specs = await uow.Specs.GetAllSpecsByIdsAsync(product.Specs);
 
         model.Specs = [.. specs];
+
+        if (product.Description != null)
+            model.Descriptions =
+            [
+                new()
+                {
+                    Description = product.Description,
+                    Language = Language.English,
+                    Product = model,
+                }
+            ];
+
+        await uow.Products.AddProductAsync(model);
         
         await uow.SaveChangesAsync();
         
@@ -57,7 +69,7 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
         await uow.SaveChangesAsync();
     }
 
-    public async Task DeleteProduct(Guid id)
+    public async Task DeleteProductAsync(Guid id)
     {
         var model = await uow.Products.GetProductAsync(id)
                     ?? throw new BadRequestException();

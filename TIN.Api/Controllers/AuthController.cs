@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using TIN.Core.Dtos;
 using TIN.Core.Dtos.User;
 using TIN.Core.Services;
 
 namespace TIN_PRO.Controllers;
 
 [ApiController]
-[Route($"{ApiConstants.BaseApiUri}/auth")]
+[Route($"{ApiConstants.BaseApiUri}/[controller]")]
 public class AuthController(UserService service) : ControllerBase
 {
     [HttpPost("login")]
