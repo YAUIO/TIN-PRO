@@ -23,7 +23,7 @@ If there is an error with EF version, install locally (should be done on dotnet 
 ```
 dotnet run --project TIN.Api
 ```
-Db connection string is in TIN.Api/appsettings.json
+Db connection string is in ```TIN.Api/appsettings.json```
 
 
 ## Frontend: Two options
@@ -35,11 +35,11 @@ cd bin/Release/net10.0/publish/wwwroot
 // serve
 python3 -m http.server 5221
 ```
-Backend connection string is in appsettings.json
+Backend connection string is in ```appsettings.json```
 
 
 ### Serve via dotnet
 ```
 dotnet run --project TIN.Frontend
 ```
-Backend connection string is in TIN.Frontend/wwwroot/appsettings.json
+Backend connection string is in ```TIN.Frontend/wwwroot/appsettings.json```
