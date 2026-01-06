@@ -9,7 +9,7 @@ using TIN.Data.Entities.Enums;
 
 namespace TIN.Core.Services;
 
-public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : IProductService
+public class ProductService(IUnitOfWork uow) : IProductService
 {
     public async Task<IEnumerable<GetProductDto>> GetAllProductsAsync()
     {
@@ -88,10 +88,9 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
     
         uow.Specs.RemoveRange(toRemove);
         
-        foreach (var spec in newSpecs)
+        foreach (var spec in newSpecs.Where(spec => !product.Specs.Contains(spec)))
         {
-            if (!product.Specs.Contains(spec))
-                product.Specs.Add(spec);
+            product.Specs.Add(spec);
         }
     
         product.UpdateWithDto(dto.Product);
@@ -123,8 +122,6 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
     
         await uow.Specs.AddRangeAsync(specs);
     
-        logger.LogInformation("Created specs: " + string.Join(", ", specs.SelectMany(s => s.Names).Select(n => n.Name)));
-
         return specs;
     }
 }
