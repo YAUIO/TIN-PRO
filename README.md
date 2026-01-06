@@ -30,7 +30,7 @@ Db connection string is in ```TIN.Api/appsettings.json```
 ### Serve via any http server as SPA
 ```
 dotnet publish
-cd bin/Release/net10.0/publish/wwwroot
+cd TIN.Frontend/bin/Release/net10.0/publish/wwwroot
 
 // serve
 python3 -m http.server 5221
