@@ -13,10 +13,11 @@ https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 git clone https://github.com/YAUIO/TIN-PRO.git
 cd TIN-PRO
 dotnet restore
-dotnet tool install dotnet-ef
 dotnet ef database update -s TIN.Api -p TIN.Data
 dotnet build
 ```
+
+If there is an error with EF version, install locally (should be done on dotnet restore automatically) : ```dotnet tool install dotnet-ef```
 
 ## Backend:
 ```
