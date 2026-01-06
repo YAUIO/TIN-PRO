@@ -1,5 +1,7 @@
 Fullstack PC Store project using ASP.NET, Blazor and EF Core
+
 SQLite was more of a requirement, than a choice
+
 PJATK TIN Project
 
 # Build instructions
