@@ -2,13 +2,13 @@ namespace TIN.Core.Dtos.Product;
 
 public class PostProductDto
 {
-    public string Name { get; init; }
+    public string Name { get; set; }
     
-    public string ImageUri { get; init; }
+    public string ImageUri { get; set; }
         
-    public decimal Price { get; init; }
+    public decimal Price { get; set; }
     
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
-    public List<Guid> Specs { get; init; } = [];
+    public List<Guid> Specs { get; set; } = [];
 }

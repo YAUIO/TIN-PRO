@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 using TIN.Core.Dtos.Order;
 using TIN.Data.Entities.Enums;
@@ -49,6 +50,6 @@ public class OrderFetcher(IOptions<ApiOptions> options, IApiFetcher api) : IOrde
             })],
         };
         var id = await api.PostAsync(_apicfg.Orders, dto);
-        return Guid.Parse(id);
+        return JsonSerializer.Deserialize<Guid>(id);
     }
 }

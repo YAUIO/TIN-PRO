@@ -12,4 +12,6 @@ public interface IProductFetcher
     Task RemoveProduct(Guid id);
     
     Task UpdateProductAsync(PutProductWrapperDto product);
+    
+    Task<Guid> CreateProductAsync(PostProductWrapperDto dto);
 }

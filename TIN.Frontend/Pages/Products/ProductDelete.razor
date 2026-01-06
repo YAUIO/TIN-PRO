@@ -23,7 +23,7 @@
         try
         {
             await ProductFetcher.RemoveProduct(Id);
-            await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success);
+            await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success, 800);
             Nav.NavigateTo("/admin/products");
         }
         catch (HttpRequestException e)
@@ -46,7 +46,7 @@ else
     <h2>@_product.Name</h2>
     <div>
         <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-        <h1>@_product.Price $ <button class="btn btn-info" @onclick="RemoveProduct">Remove product</button></h1>
+        <h1>@_product.Price $ <button class="btn btn-danger" @onclick="RemoveProduct">Remove product</button></h1>
     </div>
     <p>@(_product.Description ?? "No description available.")</p>
     <table class="table">

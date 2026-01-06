@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using TIN.Core.Dtos.Order;
 using TIN.Core.Dtos.Product;
 using TIN.Core.Exceptions;
@@ -30,30 +29,25 @@ public class ProductService(IUnitOfWork uow) : IProductService
         return product.ToDto();
     }
 
-    public async Task<Guid> AddProductAsync(PostProductDto product)
+    public async Task<Guid> AddProductAsync(PostProductWrapperDto dto)
     {
-        var model = product.ToModel();
+        var product = dto.Product.ToModel();
 
-        var specs = await uow.Specs.GetAllSpecsByIdsAsync(product.Specs);
-
-        model.Specs = [.. specs];
-
-        if (product.Description != null)
-            model.Descriptions =
-            [
-                new()
-                {
-                    Description = product.Description,
-                    Language = Language.English,
-                    Product = model,
-                }
-            ];
-
-        await uow.Products.AddProductAsync(model);
+        await uow.Products.AddProductAsync(product);
+    
+        var newSpecs = await CreateAll(dto.CreateSpecs, product);
+    
+        if (newSpecs.Count != dto.CreateSpecs.Count)
+            throw new BadRequestException();
         
+        foreach (var spec in newSpecs.Where(spec => !product.Specs.Contains(spec)))
+        {
+            product.Specs.Add(spec);
+        }
+    
         await uow.SaveChangesAsync();
-        
-        return model.Id;
+
+        return product.Id;
     }
     
     public async Task DeleteProductAsync(Guid id)
@@ -102,9 +96,6 @@ public class ProductService(IUnitOfWork uow) : IProductService
     {
         if (dtos.Count == 0)
             return [];
-
-        if (dtos.Select(d => d.ProductId).ToHashSet().Count > 1)
-            throw new BadRequestException();
 
         var specs = dtos.Select(d => d.ToModel(product)).ToList();
         

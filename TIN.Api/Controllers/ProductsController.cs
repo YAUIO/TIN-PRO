@@ -33,8 +33,10 @@ public class ProductsController(IProductService service) : ControllerBase
     }
     
     [HttpPost]
-    public async Task AddProduct([FromBody] PostProductDto dto)
+    public async Task<IActionResult> AddProduct([FromBody] PostProductWrapperDto dto)
     {
-        await service.AddProductAsync(dto);
+        var id = await service.AddProductAsync(dto);
+        
+        return Ok(id);
     }
 }

@@ -3,7 +3,7 @@
 @inject NavigationManager Nav
 @inject StatusService Status
 
-@page "/product/{Id:guid}/edit"
+@page "/products/add"
 @using TIN.Core.Dtos.Product
 @using TIN.Core.Exceptions
 @using TIN.Frontend.Api
@@ -11,40 +11,33 @@
 @code{
     [Parameter] public Guid Id { get; init; }
 
-    PutProductDto? _product;
-    GetProductDto? _getDto;
+    PostProductDto? _product;
 
     List<PostSpecDto> _specs = [];
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _getDto = await ProductFetcher.GetProduct(Id);
-        
-        if (_getDto != null)
-            _product = new()
-            {
-                ProductId = _getDto.ProductId,
-                Name = _getDto.Name,
-                ImageUri = _getDto.ImageUri,
-                Price = _getDto.Price,
-            };
+        _product = new();
     }
 
     async Task EditProductAsync()
     {
         try
         {
-            if (_specs.Count + _getDto!.Specs.Count == 0)
+            if (_specs.Count == 0)
                 throw new BadRequestException();
 
-            var dto = new PutProductWrapperDto()
+            var dto = new PostProductWrapperDto()
             {
                 Product = _product!,
-                UpdateSpecs = _getDto!.Specs,
                 CreateSpecs = _specs,
             };
             
-            await ProductFetcher.UpdateProductAsync(dto);
+            var guid = await ProductFetcher.CreateProductAsync(dto);
+
+            await Status.SetStatusAsync("Created successfully!", StatusService.StatusType.Success, 800);
+            
+            Nav.NavigateTo($"/product/{guid}");
         }
         catch (HttpRequestException e)
         {
@@ -57,7 +50,8 @@
 
     void AddSpec()
     {
-        _specs.Add(new());
+        var dto = new PostSpecDto();
+        _specs.Add(dto);
     }
 
     async Task HandleInvalidSubmitAsync()
@@ -68,7 +62,7 @@
 
 <PageTitle>@(_product?.Name ?? "Error")</PageTitle>
 
-@if (_product == null || _getDto == null)
+@if (_product == null)
 {
     <p> No such product </p>
 }
@@ -79,29 +73,20 @@ else
         
         <ValidationSummary />
         
-        <InputText class="form-control h2" @bind-Value="_product.Name"></InputText>
+        <InputText class="form-control h2" @bind-Value="_product.Name"> Name </InputText>
         <div>
             <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-            <InputText class="form-control h4" @bind-Value="_product.ImageUri"></InputText>
-            <InputNumber class="form-control h1" @bind-Value="_product.Price"></InputNumber>
+            <InputText class="form-control h4" @bind-Value="_product.ImageUri"> Image </InputText>
+            <InputNumber class="form-control h1" @bind-Value="_product.Price"> Price </InputNumber>
         </div>
-        <a class="btn btn-warning" href="localization/@_product.ProductId">Edit localization</a>
         <table class="table">
             <thead>
-            <th class="w-auto"></th>
-            <th class="w-auto"></th>
+            <th class="w-auto"> Key </th>
+            <th class="w-auto"> Value </th>
             <th class="w-auto"></th>
             </thead>
 
             <tbody>
-            @foreach (var spec in _getDto.Specs.ToList())
-            {
-                <tr>
-                    <td>@spec.Key</td>
-                    <td><InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText></td>
-                    <td><button type="button" class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)"> Remove </button></td>
-                </tr>
-            }
             @foreach (var spec in _specs)
             {
                 <tr>

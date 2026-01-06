@@ -12,7 +12,7 @@ public interface IProductService
 
     Task<GetProductDto> GetProductAsync(Guid productId);
     
-    Task<Guid> AddProductAsync(PostProductDto product);
+    Task<Guid> AddProductAsync(PostProductWrapperDto dto);
     
     Task UpdateProductAsync(PutProductWrapperDto product);
     
