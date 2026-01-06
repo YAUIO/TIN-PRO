@@ -14,7 +14,7 @@ public interface IProductService
     
     Task<Guid> AddProductAsync(PostProductDto product);
     
-    Task UpdateProductAsync(PutProductDto product);
+    Task UpdateProductAsync(PutProductWrapperDto product);
     
     Task DeleteProductAsync(Guid id);
 }

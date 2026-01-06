@@ -16,4 +16,6 @@ public interface ILocalizationRepository
     Task<IEnumerable<SpecNameModel>> GetProductSpecNames(Guid productId);
     
     Task<IEnumerable<ProductDescriptionModel>> GetProductDescriptions(Guid productId);
+    
+    Task AddSpecNamesAsync(IEnumerable<SpecNameModel> names);
 }

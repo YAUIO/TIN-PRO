@@ -18,26 +18,11 @@ public static class SpecMapping
         Value = model.Value,
     };
 
-    public static SpecModel ToModel(this PostSpecDto dto, ProductModel product)
+    public static SpecModel ToModel(this PostSpecDto dto, ProductModel product) => new()
     {
-        var model = new SpecModel
-        {
-            Value = dto.Value,
-            Product = product,
-        };
-
-        model.Names =
-        [
-            new()
-            {
-                Language = Language.English,
-                Name = dto.Key,
-                Spec = model,
-            }
-        ];
-
-        return model;
-    }
+        Value = dto.Value,
+        Product = product,
+    };
 
     public static GetSpecNameDto ToDto(this SpecNameModel model) => new()
     {

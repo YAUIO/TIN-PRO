@@ -9,14 +9,6 @@ namespace TIN.Frontend.Api;
 public class SpecFetcher(IOptions<ApiOptions> options, IApiFetcher api) : ISpecFetcher
 {
     private readonly ApiOptions _apicfg = options.Value;
-
-    private static readonly JsonSerializerOptions Options = new();
-
-    static SpecFetcher()
-    {
-        Options.Converters.Add(new JsonStringEnumConverter());
-    }
-    
     
     public async Task<List<Guid>> CreateAllSpecsAsync(List<PostSpecDto> specs)
     {
@@ -27,11 +19,6 @@ public class SpecFetcher(IOptions<ApiOptions> options, IApiFetcher api) : ISpecF
 
         return string.IsNullOrEmpty(json) ? 
             [] : 
-            JsonSerializer.Deserialize<List<Guid>>(json, Options)!;
-    }
-
-    public async Task UpdateSpecsAsync(PutSpecsDto specs)
-    {
-        await api.UpdateAsync(_apicfg.Specs, specs);
+            JsonSerializer.Deserialize<List<Guid>>(json, ApiFetcher.Options)!;
     }
 }

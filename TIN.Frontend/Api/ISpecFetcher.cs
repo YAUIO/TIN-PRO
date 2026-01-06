@@ -5,5 +5,4 @@ namespace TIN.Frontend.Api;
 public interface ISpecFetcher
 {
     Task<List<Guid>> CreateAllSpecsAsync(List<PostSpecDto> specs);
-    Task UpdateSpecsAsync(PutSpecsDto specs);
 }

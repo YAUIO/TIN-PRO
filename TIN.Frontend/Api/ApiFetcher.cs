@@ -1,13 +1,22 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TIN.Frontend.Api;
 
 public class ApiFetcher(HttpClient http) : IApiFetcher
 {
+    public static readonly JsonSerializerOptions Options = new(){
+        PropertyNameCaseInsensitive = true,
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
+    };
+    
     public async Task<T> FetchAsync<T>(string path)
     {
-        var result = await http.GetFromJsonAsync<T>(path);
+        var result = await http.GetFromJsonAsync<T>(path, Options);
 
         return result!;
     }

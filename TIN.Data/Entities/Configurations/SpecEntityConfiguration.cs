@@ -13,7 +13,8 @@ public class SpecEntityConfiguration : IEntityTypeConfiguration<SpecModel>
             .ValueGeneratedOnAdd();
 
         builder.HasMany(s => s.Names)
-            .WithOne(s => s.Spec);
+            .WithOne(s => s.Spec)
+            .HasForeignKey(s => s.SpecId);
 
         builder.Property(s => s.Value)
             .HasMaxLength(100);

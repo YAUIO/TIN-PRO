@@ -38,7 +38,7 @@ public class ProductFetcher(IApiFetcher api, IOptions<ApiOptions> options) : IPr
         await api.DeleteAsync(_apicfg.Products, id.ToString());
     }
 
-    public async Task UpdateProductAsync(PutProductDto product)
+    public async Task UpdateProductAsync(PutProductWrapperDto product)
     {
         await api.UpdateAsync(_apicfg.Products, product);
     }

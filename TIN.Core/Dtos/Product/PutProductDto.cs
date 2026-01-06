@@ -19,6 +19,5 @@ public class PutProductDto
     [Range(typeof(decimal), "0.01", "1000000")]
     public decimal Price { get; set; }
     
-    [MinLength(1)]
     public List<Guid> Specs { get; set; } = [];
 }

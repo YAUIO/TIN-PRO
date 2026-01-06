@@ -9,7 +9,10 @@ public class SpecNameEntityConfiguration : IEntityTypeConfiguration<SpecNameMode
     {
         builder.ToTable("SpecNames");
 
-        builder.HasKey(s => new { s.Name, s.Language });
+        builder.HasKey(s => s.Id);
+
+        builder.Property(s => s.Id)
+            .ValueGeneratedOnAdd();
         
         builder.Property(s => s.Name)
             .IsRequired(true)

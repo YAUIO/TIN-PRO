@@ -1,18 +1,16 @@
-﻿@using TIN.Core.Dtos
-@using TIN.Core.Dtos.Product
+﻿@using TIN.Core.Dtos.Product
 @using TIN.Frontend.Api
 @using TIN.Frontend.Cart
 
 @inject IProductFetcher ProductFetcher
 @inject ICartService Cart
+@inject StatusService Status
 @page "/"
 
 <PageTitle>Catalogue</PageTitle>
 
 @code{
     List<GetProductDto>? _products;
-
-    string _status = string.Empty;
     
     protected override async Task OnInitializedAsync()
     {
@@ -34,18 +32,9 @@
             UnitPrice = product.Price,
             Quantity = 1,
         });
-        
-        _status = "Added successfully!";
-        StateHasChanged();
-        
-        await Task.Delay(2000);
-        _status = string.Empty;
-    }
-}
 
-@if (!string.IsNullOrEmpty(_status))
-{
-    <div class="alert alert-success mt-2">@_status</div>
+        await Status.SetStatusAsync("Added successfully!", StatusService.StatusType.Success);
+    }
 }
 
 @if (_products == null)

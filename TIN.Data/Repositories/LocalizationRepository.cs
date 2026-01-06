@@ -32,6 +32,7 @@ public class LocalizationRepository(StoreDbContext context) : ILocalizationRepos
         return await context.Specs
             .Where(s => s.Product.Id == productId)
             .SelectMany(s => s.Names)
+            .Include(p => p.Spec)
             .ToListAsync();
     }
 
@@ -40,5 +41,10 @@ public class LocalizationRepository(StoreDbContext context) : ILocalizationRepos
         return await context.ProductDescriptions
             .Where(s => s.Product.Id == productId)
             .ToListAsync();
+    }
+
+    public async Task AddSpecNamesAsync(IEnumerable<SpecNameModel> names)
+    {
+        await context.SpecNames.AddRangeAsync(names);
     }
 }

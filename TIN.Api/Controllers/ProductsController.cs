@@ -27,12 +27,12 @@ public class ProductsController(IProductService service) : ControllerBase
     }
     
     [HttpPut]
-    public async Task UpdateProduct([FromBody] PutProductDto dto)
+    public async Task UpdateProduct([FromBody] PutProductWrapperDto dto)
     {
         await service.UpdateProductAsync(dto);
     }
     
-    [HttpPut]
+    [HttpPost]
     public async Task AddProduct([FromBody] PostProductDto dto)
     {
         await service.AddProductAsync(dto);

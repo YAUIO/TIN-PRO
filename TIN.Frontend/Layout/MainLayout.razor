@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+
+@inject StatusService StatusService;
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -13,7 +16,25 @@
         <a href=""><h1 class="text-center header-text">PC Store Application</h1></a>
 
         <article class="content px-4">
+            @if (!string.IsNullOrEmpty(StatusService.Status))
+            {
+                <div class="alert @StatusService.CssClass mt-2">@StatusService.Status</div>
+            }
+            
             @Body
         </article>
     </main>
 </div>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        StatusService.OnChange += StateHasChanged;
+    }
+    
+    public void Dispose()
+    {
+        StatusService.OnChange -= StateHasChanged;
+    }
+}

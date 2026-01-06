@@ -3,14 +3,13 @@
 
 @inject IProductFetcher ProductFetcher
 @inject NavigationManager Nav
+@inject StatusService Status
 
 @page "/product/{Id:guid}/delete"
 
 @code{
     [Parameter]
     public Guid Id { get; init; }
-
-    string? _status;
     
     GetProductDto? _product;
     
@@ -21,26 +20,20 @@
 
     async Task RemoveProduct()
     {
-        await ProductFetcher.RemoveProduct(Id);
-        await ToggleAlert("Product removed");
-        Nav.NavigateTo("/admin/products");
-    }
-
-    async Task ToggleAlert(string alert, int delay = 2000)
-    {
-        _status = alert;
-        StateHasChanged();
-        await Task.Delay(delay);
-        _status = string.Empty;
+        try
+        {
+            await ProductFetcher.RemoveProduct(Id);
+            await Status.SetStatusAsync("Product removed", StatusService.StatusType.Success);
+            Nav.NavigateTo("/admin/products");
+        }
+        catch (HttpRequestException e)
+        {
+            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+        }
     }
 }
 
 <PageTitle>@(_product?.Name ?? "Error")</PageTitle>
-
-@if (!string.IsNullOrEmpty(_status))
-{
-    <div class="alert alert-success mt-2">@_status</div>
-}
 
 @if (_product == null)
 {

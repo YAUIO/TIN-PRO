@@ -5,11 +5,15 @@ using TIN.Frontend;
 using TIN.Frontend.Api;
 using TIN.Frontend.Auth;
 using TIN.Frontend.Cart;
+using TIN.Frontend.Layout;
 using TIN.Frontend.Options;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+// Status handler
+builder.Services.AddScoped<StatusService>();
 
 // Typed http client
 builder.Services.AddHttpClient<IApiFetcher, ApiFetcher>(client =>

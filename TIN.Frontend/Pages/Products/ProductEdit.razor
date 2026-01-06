@@ -1,9 +1,11 @@
 @inject IProductFetcher ProductFetcher
 @inject ISpecFetcher SpecFetcher
 @inject NavigationManager Nav
+@inject StatusService Status
 
 @page "/product/{Id:guid}/edit"
 @using TIN.Core.Dtos.Product
+@using TIN.Core.Exceptions
 @using TIN.Frontend.Api
 
 @code{
@@ -28,23 +30,29 @@
             };
     }
 
-    async Task EditProduct()
+    async Task EditProductAsync()
     {
-        var specs = await SpecFetcher.CreateAllSpecsAsync(_specs);
-
-        await SpecFetcher.UpdateSpecsAsync(new()
+        try
         {
-            Specs = _getDto!.Specs,
-            ProductId = _product!.ProductId,
-        });
-        
-        specs.AddRange(_getDto!.Specs.Select(s => s.Id));
+            if (_specs.Count + _getDto!.Specs.Count == 0)
+                throw new BadRequestException();
 
-        _product!.Specs = specs;
-
-        await ProductFetcher.UpdateProductAsync(_product);
-        
-        Nav.Refresh();
+            var dto = new PutProductWrapperDto()
+            {
+                Product = _product!,
+                UpdateSpecs = _getDto!.Specs,
+                CreateSpecs = _specs,
+            };
+            
+            await ProductFetcher.UpdateProductAsync(dto);
+        }
+        catch (HttpRequestException e)
+        {
+            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+        } catch (BadRequestException)
+        {
+            await Status.SetStatusAsync("Specs can't be empty", StatusService.StatusType.Error);
+        }
     }
 
     void AddSpec()
@@ -54,6 +62,11 @@
             ProductId = _product!.ProductId
         };
         _specs.Add(dto);
+    }
+
+    async Task HandleInvalidSubmitAsync()
+    {
+        await Status.SetStatusAsync("Invalid submit", StatusService.StatusType.Error);
     }
 }
 
@@ -65,14 +78,16 @@
 }
 else
 {
-    <EditForm @onsubmit="EditProduct">
+    <EditForm OnValidSubmit="EditProductAsync" OnInvalidSubmit="HandleInvalidSubmitAsync" Model="_product">
         <DataAnnotationsValidator />
         
-        <InputText @bind-Value="_product.Name" class="h2"></InputText>
+        <ValidationSummary />
+        
+        <InputText class="form-control h2" @bind-Value="_product.Name"></InputText>
         <div>
             <img class="preview-image" alt="Image of @_product.Name" src="@_product.ImageUri">
-            <InputText @bind-Value="_product.ImageUri" class="h4"></InputText>
-            <InputNumber @bind-Value="_product.Price" class="h1"></InputNumber>
+            <InputText class="form-control h4" @bind-Value="_product.ImageUri"></InputText>
+            <InputNumber class="form-control h1" @bind-Value="_product.Price"></InputNumber>
         </div>
         <a class="btn btn-warning" href="localization/@_product.ProductId">Edit localization</a>
         <table class="table">
@@ -83,25 +98,25 @@ else
             </thead>
 
             <tbody>
-            @foreach (var spec in _getDto.Specs)
+            @foreach (var spec in _getDto.Specs.ToList())
             {
                 <tr>
                     <td>@spec.Key</td>
-                    <InputText @bind-Value="spec.Value">@spec.Value</InputText>
-                    <button class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)"> Remove </button>
+                    <td><InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText></td>
+                    <td><button type="button" class="btn btn-danger" @onclick="() => _getDto.Specs.Remove(spec)"> Remove </button></td>
                 </tr>
             }
             @foreach (var spec in _specs)
             {
                 <tr>
-                    <InputText @bind-Value="spec.Key">@spec.Key</InputText>
-                    <InputText @bind-Value="spec.Value">@spec.Value</InputText>
-                    <button class="btn btn-danger" @onclick="() => _specs.Remove(spec)"> Remove </button>
+                    <td><InputText class="form-control" @bind-Value="spec.Key">@spec.Key</InputText></td>
+                    <td><InputText class="form-control" @bind-Value="spec.Value">@spec.Value</InputText></td>
+                    <td><button type="button" class="btn btn-danger" @onclick="() => _specs.Remove(spec)"> Remove </button></td>
                 </tr>
             }
             </tbody>
         </table>
-        <button class="btn btn-warning" @onclick="AddSpec"> Add new spec </button>
-        <button type="submit" class="btn btn-success"></button>
+        <button type="button" class="btn btn-warning" @onclick="AddSpec"> Add new spec </button> <br/> <br/>
+        <button type="submit" class="btn btn-success"> Save </button>
     </EditForm>
 }

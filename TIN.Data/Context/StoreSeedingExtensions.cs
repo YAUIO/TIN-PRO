@@ -56,13 +56,15 @@ public static class StoreSeedingExtensions
         [
             new()
             {
-                Spec = r7corespecs,
+                Id = Guid.Parse("50d5a8fe-841c-41c6-a407-ab3b0ab212e1"),
+                SpecId = r7corespecs.Id,
                 Language = Language.English,
                 Name = "Cores",
             },
             new()
             {
-                Spec = r7corespecs,
+                Id = Guid.Parse("533ad5a1-666b-4baf-9f94-c5f460990be0"),
+                SpecId = r7corespecs.Id,
                 Language = Language.Polish,
                 Name = "Liczba rdzeni",
             }

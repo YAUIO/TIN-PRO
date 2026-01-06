@@ -4,6 +4,7 @@ using TIN.Core.Dtos.Product;
 using TIN.Core.Exceptions;
 using TIN.Core.Mappings;
 using TIN.Data.Context;
+using TIN.Data.Entities;
 using TIN.Data.Entities.Enums;
 
 namespace TIN.Core.Services;
@@ -54,21 +55,7 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
         
         return model.Id;
     }
-
-    public async Task UpdateProductAsync(PutProductDto product)
-    {
-        var model = await uow.Products.GetProductAsync(product.ProductId)
-            ?? throw new BadRequestException();
-        
-        model.UpdateWithDto(product);
-        
-        var specs = await uow.Specs.GetAllSpecsByIdsAsync(product.Specs);
-
-        model.Specs = [.. specs];
-        
-        await uow.SaveChangesAsync();
-    }
-
+    
     public async Task DeleteProductAsync(Guid id)
     {
         var model = await uow.Products.GetProductAsync(id)
@@ -77,5 +64,67 @@ public class ProductService(IUnitOfWork uow, ILogger<ProductService> logger) : I
         uow.Products.DeleteProduct(model);
         
         await uow.SaveChangesAsync();
+    }
+
+    public async Task UpdateProductAsync(PutProductWrapperDto dto)
+    {
+        var product = await uow.Products.GetProductAsync(dto.Product.ProductId)
+                      ?? throw new BadRequestException();
+    
+        var newSpecs = await CreateAll(dto.CreateSpecs, product);
+    
+        if (newSpecs.Count != dto.CreateSpecs.Count)
+            throw new BadRequestException();
+        
+        List<SpecModel> toUpdate = [.. await uow.Specs.GetAllSpecsByIdsAsync(dto.UpdateSpecs.Select(s => s.Id))];
+    
+        List<SpecModel> toRemove = [.. product.Specs.Where(s => !toUpdate.Contains(s) && !newSpecs.Contains(s))];
+    
+        for (var i = 0; i < toUpdate.Count; i++)
+            toUpdate[i].Value = dto.UpdateSpecs[i].Value;
+        
+        foreach (var rm in toRemove)
+            product.Specs.Remove(rm);
+    
+        uow.Specs.RemoveRange(toRemove);
+        
+        foreach (var spec in newSpecs)
+        {
+            if (!product.Specs.Contains(spec))
+                product.Specs.Add(spec);
+        }
+    
+        product.UpdateWithDto(dto.Product);
+    
+        await uow.SaveChangesAsync();
+    }
+
+    private async Task<List<SpecModel>> CreateAll(List<PostSpecDto> dtos, ProductModel product)
+    {
+        if (dtos.Count == 0)
+            return [];
+
+        if (dtos.Select(d => d.ProductId).ToHashSet().Count > 1)
+            throw new BadRequestException();
+
+        var specs = dtos.Select(d => d.ToModel(product)).ToList();
+        
+        for (var i = 0; i < specs.Count; i++)
+        {
+            specs[i].Names = new List<SpecNameModel>
+            {
+                new() {
+                    Language = Language.English,
+                    Name = dtos[i].Key,
+                    Spec = specs[i]
+                }
+            };
+        }
+    
+        await uow.Specs.AddRangeAsync(specs);
+    
+        logger.LogInformation("Created specs: " + string.Join(", ", specs.SelectMany(s => s.Names).Select(n => n.Name)));
+
+        return specs;
     }
 }

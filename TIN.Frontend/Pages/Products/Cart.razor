@@ -4,6 +4,7 @@
 @inject ICartService CartService
 @inject IOrderFetcher Orders
 @inject NavigationManager Nav;
+@inject StatusService Status
 
 @page "/cart"
 
@@ -42,8 +43,14 @@
 
     async Task Order()
     {
-        var id = await Orders.CreateOrder(_products, "Guest"); // TODO Customer name from jwt
-        Nav.NavigateTo($"/order/{id}");
+        try {
+            var id = await Orders.CreateOrder(_products, "Guest"); // TODO Customer name from jwt
+            Nav.NavigateTo($"/order/{id}");
+        }
+        catch (HttpRequestException e)
+        {
+            await Status.SetStatusAsync(e.ToErrorString(), StatusService.StatusType.Error);
+        }
     }
 }
 
