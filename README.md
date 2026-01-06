@@ -39,8 +39,5 @@ Backend connection string is in appsettings.json
 ### Serve via dotnet
 ```
 dotnet run --project TIN.Frontend
-
-// serve
-python3 -m http.server 5221
 ```
 Backend connection string is in TIN.Frontend/wwwroot/appsettings.json
